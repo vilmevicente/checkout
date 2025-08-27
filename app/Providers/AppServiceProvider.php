@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Providers;
+
+use App\Helpers\ConfigHelper;
+use App\Models\Configuration;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        // Configurar mail dinamicamente se as configurações SMTP existirem na BD
+        if ($this->app->runningInConsole()) {
+            return;
+        }
+
+        try {
+            $smtpConfig = ConfigHelper::getSmtpConfig();
+            $captchaConfig = ConfigHelper::getRecaptchaConfig();
+            
+            if (!empty($smtpConfig['host'])) {
+                config([
+                    'mail.mailers.smtp.host' => $smtpConfig['host'],
+                    'mail.mailers.smtp.port' => $smtpConfig['port'],
+                    'mail.mailers.smtp.encryption' => $smtpConfig['encryption'],
+                    'mail.mailers.smtp.username' => $smtpConfig['username'],
+                    'mail.mailers.smtp.password' => $smtpConfig['password'],
+                    'mail.from.address' => $smtpConfig['from']['address'],
+                    'mail.from.name' => $smtpConfig['from']['name'],
+                ]);
+            }
+
+
+
+            if ($captchaConfig['enabled'] && !empty($captchaConfig['site_key']) && !empty($captchaConfig['secret_key'])) {
+                config([
+                    'captcha.sitekey' => $captchaConfig['site_key'],
+                    'captcha.secret' => $captchaConfig['secret_key'],
+                    'captcha.version' => 'v3',
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Ignorar erros durante a inicialização
+        }
+    }
+    
+}
