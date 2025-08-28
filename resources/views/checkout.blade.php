@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR" x-data="checkout()">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Compra</title>
-
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -45,10 +44,11 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding-left: 1rem;
             padding-right: 1rem;
+            padding-top: 0px !important;
         }
 
         .shadow-card {
@@ -67,23 +67,15 @@
         }
 
         @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.9;
-            }
-
-            100% {
-                opacity: 1;
-            }
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
         }
 
         .benefit-card {
             background: white;
             border-radius: 12px;
-            padding: 24px 20px;
+            padding: 10px 10px;
             text-align: center;
             transition: all 0.3s ease;
             height: 100%;
@@ -114,7 +106,7 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+           
         }
 
         .benefit-icon {
@@ -204,76 +196,49 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
         }
 
         .pix-content {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 1.5rem;
             max-width: 400px;
-            width: 90%;
-            text-align: center;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
         .pix-success {
             color: #10b981;
-            font-size: 48px;
-            margin-bottom: 16px;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
         }
 
         .copy-btn {
             background-color: #4f46e5;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
             cursor: pointer;
             transition: background-color 0.3s;
+            min-height: 42px;
         }
 
         .copy-btn:hover {
             background-color: #4338ca;
         }
 
-        .hidden-section {
-            display: none;
+        .copy-btn:active {
+            transform: scale(0.98);
         }
 
-        #qrcode {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #qrcode canvas {
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, .3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Estilos para validação */
         .input-error {
             border-color: #ef4444;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -344,123 +309,275 @@
             margin: 1rem 0;
         }
 
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, .3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
 
-        .pix-modal {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    overflow-y: auto;
-}
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-.pix-content {
-    background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    max-width: 400px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-}
+        [x-cloak] {
+            display: none !important;
+        }
 
-.pix-success {
-    color: #10b981;
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-}
+         .benefit-card {
+            background: white;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 8px;
+        }
 
-.copy-btn {
-    background-color: #4f46e5;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    min-height: 42px;
-}
+        /* Ajustes específicos para mobile */
+        @media (max-width: 767px) {
+            .benefit-card {
+                height: 150px;
+                padding:  20px;
+                border-radius: 8px; 
+                width: calc(100vw - 6px); 
+                     }
+            
+            .icon-container {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 12px;
+            }
+            
+            .benefit-icon {
+                font-size: 22px;
+            }
+            
+            .benefit-title {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            
+            .benefit-description {
+                font-size: 14px;
+                max-width: 90%;
+            }
+        }
 
-.copy-btn:hover {
-    background-color: #4338ca;
-}
+        /* Estilos para desktop */
+        @media (min-width: 768px) {
+            .benefit-card {
 
-.copy-btn:active {
-    transform: scale(0.98);
-}
-
-/* Scroll personalizado para mobile */
-.pix-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.pix-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.pix-content::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
-}
-
-.pix-content::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-}
-
-/* Para evitar que o modal fique muito alto em mobile */
-@media (max-height: 600px) {
-    .pix-content {
-        padding: 1rem;
-        max-height: 95vh;
-    }
+                padding: 24px;
+                border-radius: 12px;
+               
+            }
+            
     
-    .pix-success {
-        font-size: 2.5rem;
-    }
+            
+            .benefit-icon {
+                font-size: 24px;
+            }
+            
+            .benefit-title {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .benefit-description {
+                font-size: 15px;
+                max-width: 80%;
+            }
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-container {
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+        .benefit-icon {
+            color: #4f46e5;
+        }
+
+        .benefit-title {
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .benefit-description {
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+             
     
-    #qrcode {
-        max-width: 120px;
-        margin-bottom: 1rem;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 8px;
+        }
+
+        .slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background-color: #4f46e5;
+            transform: scale(1.3);
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .slider-nav:hover {
+            opacity: 1;
+        }
+
+        .slider-prev {
+            left: 15px;
+        }
+
+        .slider-next {
+            right: 15px;
+        }
+
+        /* Desktop - Grid */
+        @media (min-width: 768px) {
+            .slider-container {
+                width: 100%;
+                margin-left: 0;
+                overflow: hidden;
+                  
+            }
+            
+            .slider-track {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                transform: none !important;
+                width: 100%;
+            }
+            
+            .benefit-card {
+                margin: 0;
+            }
+            
+            .slider-dots {
+                display: none;
+            }
+            
+            .slider-nav {
+                display: none;
+            }
+        }
+
+        /* Mobile - Slider */
+        @media (max-width: 767px) {
+            .slider-container {
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                border-radius: 12px;
+            }
+            
+            .slider-container::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .slider-track {
+                width: max-content;
+            }
+            
+            .slider-nav {
+                display: none;
+            }
+            
+            /* Mostrar setas apenas se não for touch device */
+            @media (hover: hover) {
+                .slider-nav {
+                    display: flex;
+                }
+            }
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Media query para dispositivos móveis */
+@media (max-width: 768px) {
+    .benefits-banner {
+        font-size: 0.8rem;
     }
 }
 
-/* Melhorias para telas muito pequenas */
-@media (max-width: 340px) {
-    .pix-content {
-        padding: 0.75rem;
-        border-radius: 12px;
-    }
-    
-    .pix-success {
-        font-size: 2rem;
-    }
-    
-    h2 {
-        font-size: 1.1rem;
-    }
-}
 
-[x-cloak] {
-    display: none !important;
-}
     </style>
 </head>
+
 {{-- reCAPTCHA --}}
 @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
 {!! NoCaptcha::renderJs() !!}
 @endif
+
 @if(App\Helpers\ConfigHelper::isFacebookPixelEnabled())
 <!-- Facebook Pixel Code -->
 <script>
-   
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -473,17 +590,11 @@ fbq('init', '{{ App\Helpers\ConfigHelper::get("facebook_pixel_id") }}');
 fbq('track', 'PageView');
 </script>
 <noscript>
-        <img 
-            height="1" 
-            width="1" 
-            style="display:none;" 
-            src="https://www.facebook.com/tr?id={{ App\Helpers\ConfigHelper::get('facebook_pixel_id') }}&ev=PageView&noscript=1"
-            alt="Facebook Pixel"
-            loading="lazy"
-        />
-/></noscript>
+    <img height="1" width="1" style="display:none;" 
+         src="https://www.facebook.com/tr?id={{ App\Helpers\ConfigHelper::get('facebook_pixel_id') }}&ev=PageView&noscript=1"
+         alt="Facebook Pixel" loading="lazy" />
+</noscript>
 <!-- End Meta Pixel Code -->
-
 @endif
 
 <body>
@@ -498,70 +609,126 @@ fbq('track', 'PageView');
         <span id="success-message"></span>
     </div>
 
-    <!-- Top Banner -->
-    <div class="top-banner">
-        <div class="container">
-            🚀 OFERTA EXCLUSIVA: GARANTA SEU DESCONTO AGORA MESMO! 🚀
-        </div>
-    </div>
+   
+      <div class="container px-4 py-8 flex-1">
 
-    <!-- Header Banner -->
-    <div class="countdown text-white text-center py-3 px-4 font-bold">
-        <div class="container flex flex-col md:flex-row items-center justify-center gap-2">
-            <span>OFERTA RELÂMPAGO! </span>
-            <span>Seu desconto expira em: </span>
-            <div id="countdown-timer" class="flex items-center gap-1">
-                <span class="bg-white text-red-600 px-2 py-1 rounded font-mono">15:00</span>
-            </div>
-        </div>
-    </div>
+<div class="z-50 text-center mx-auto bg-opacity-75 w-full py-6" style="margin-left: -5px;"><div class="p-2"><div class="w-full relative p-2"><!---->
+     <div class="flex items-center h-full justify-center w-full">
+        <div class="flex items-center justify-center flex-wrap">
+            <div class="text-4xl">
+                <div data-v-7c035809="">
+                    <div data-v-7c035809="">
 
-    <!-- Checkout Header -->
-    <div class="bg-white border-b shadow-card">
-        <div class="container px-4 py-6">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Finalizar Compra</h1>
-                    <p class="text-gray-600 mt-1">Complete seus dados para continuar</p>
-                </div>
-                <div class="flex items-center gap-4 text-sm text-gray-600 mt-4 md:mt-0">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                        </svg>
-                        <span>Compra Segura</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 01-2-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                        </svg>
-                        <span>Dados Protegidos</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    </div> 
+                    <div id="countdown-timer"><!---->
+                        <span>04</span>:<span >42</span>
+                    </div> 
+                    <div data-v-7c035809="">
 
-    <div class="container px-4 py-8 flex-1">
+                    </div> <!----></div> <!----></div> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#4f46e5" width="36px" height="36px" class="mx-4"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg> 
+    
+    <div class="text-sm font-medium" id="timerText">
+            Aproveite agora o desconto especial!
+          </div> </div></div></div></div></div>
+
         <!-- Banner principal -->
         <img src="/storage/{{ $mainProduct['main_banner'] }}" alt="Banner Principal" class="w-full mb-8 rounded-lg shadow-card">
 
-        <!-- Benefits Banner -->
+        <!-- Benefits Section with Slider -->
         <div class="benefits-banner">
             <i class="fas fa-gift mr-2"></i> SEUS BENEFÍCIOS EXCLUSIVOS
         </div>
 
-        <!-- Features/Benefícios -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            @foreach($mainProduct['features'] as $feature)
-            <div class="benefit-card shadow-card text-center p-6 rounded-xl bg-white">
-                <div class="icon-container text-indigo-600 text-3xl mb-3">
-                    <i class="{{ 'fa '.$feature['icon'] }}"></i>
+        <!-- Slider de Benefícios -->
+      
+        
+        <div class="content">
+            <div 
+                x-data="{
+                   
+                    currentIndex: 0,
+                    
+                    init() {
+                        this.startAutoPlay();
+                    },
+                    
+                    next() {
+                        this.currentIndex = (this.currentIndex + 1) % this.features.length;
+                        this.restartAutoPlay();
+                    },
+                    
+                    prev() {
+                        this.currentIndex = (this.currentIndex - 1 + this.features.length) % this.features.length;
+                        this.restartAutoPlay();
+                    },
+                    
+                    goTo(index) {
+                        this.currentIndex = index;
+                        this.restartAutoPlay();
+                    },
+                    
+                    startAutoPlay() {
+                        this.intervalId = setInterval(() => {
+                            this.next();
+                        }, 4000);
+                    },
+                    
+                    restartAutoPlay() {
+                        clearInterval(this.intervalId);
+                        this.startAutoPlay();
+                    }
+                }" 
+                class="relative"
+            >
+                <!-- Mobile Slider -->
+                <div class="relative md:hidden">
+                    <div class="slider-container" x-ref="slider">
+                        <div class="slider-track" :style="'transform: translateX(-' + (currentIndex * 100) + 'vw)'">
+                            <template x-for="(feature, index) in features" :key="index">
+                                <div class="benefit-card">
+                                    <div class="icon-container">
+                                        <i :class="'benefit-icon fa ' + feature.icon"></i>
+                                    </div>
+                                    <h3 class="benefit-title" x-text="feature.name"></h3>
+                                    <p class="benefit-description" x-text="feature.description"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <button class="slider-nav slider-prev" @click="prev()">
+                        <i class="fas fa-chevron-left text-indigo-600"></i>
+                    </button>
+                    
+                    <button class="slider-nav slider-next" @click="next()">
+                        <i class="fas fa-chevron-right text-indigo-600"></i>
+                    </button>
                 </div>
-                <h3 class="font-bold text-lg mb-2">{{ $feature['name'] }}</h3>
-                <p class="text-sm text-gray-600">{{ $feature['description'] }}</p>
+                
+                <!-- Desktop Grid -->
+                <div class="hidden md:grid md:grid-cols-3 gap-8 mb-8">
+                    <template x-for="(feature, index) in features" :key="index">
+                        <div class="benefit-card">
+                            <div class="icon-container">
+                                <i :class="'benefit-icon fa ' + feature.icon"></i>
+                            </div>
+                            <h3 class="benefit-title" x-text="feature.name"></h3>
+                            <p class="benefit-description" x-text="feature.description"></p>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Indicadores (Dots) -->
+                <div class="slider-dots">
+                    <template x-for="(_, index) in features" :key="index">
+                        <div 
+                            class="slider-dot" 
+                            :class="{ 'active': currentIndex === index }"
+                            @click="goTo(index)"
+                        ></div>
+                    </template>
+                </div>
             </div>
-            @endforeach
         </div>
 
         <!-- FORMULÁRIO PRINCIPAL -->
@@ -706,45 +873,7 @@ fbq('track', 'PageView');
                         </div>
                     </div>
 
-                    <!-- Upsells Section -->
-                    <div class="bg-white rounded-xl shadow-elevated p-6 mb-8">
-                        <h2 class="text-lg font-semibold mb-6">Você pode gostar</h2>
-
-                        @foreach($upsells as $index => $upsell)
-                        @php
-                        $discountPercentage = round((($upsell['original_price'] - $upsell['price']) / $upsell['original_price']) * 100);
-                        @endphp
-                        <div class="flex items-start gap-4 border rounded-xl p-4 mb-6 upsell-item">
-                            <img src="/storage/{{ $upsell['secondary_banner'] }}"
-                                alt="{{ $upsell['name'] }}"
-                                class="w-16 h-16 rounded-lg object-cover">
-
-                            <div class="flex-1">
-                                <label for="upsell-{{ $index }}" class="font-medium text-sm cursor-pointer block">
-                                    <input type="checkbox"
-                                        id="upsell-{{ $index }}"
-                                        name="upsells[]"
-                                        value="{{ $upsell['id'] }}"
-                                        class="mr-2 h-5 w-5 text-indigo-600 border-gray-300 rounded upsell-checkbox"
-                                        data-price="{{ $upsell['price'] }}"
-                                        data-original-price="{{ $upsell['original_price'] }}"
-                                        data-name="{{ $upsell['name'] }}"
-                                        {{ in_array($upsell['id'], old('upsells', [])) ? 'checked' : '' }}
-                                        @change="updateUpsell('{{ $index }}', $event.target.checked, {{ $upsell['price'] }}, {{ $upsell['original_price'] }}, {{ $upsell['id'] }})">
-                                    {{ $upsell['name'] }} -
-                                    <span class="font-semibold">R$ {{ number_format($upsell['price'], 2, ',', '.') }}</span>
-                                </label>
-
-                                <p class="text-xs text-gray-500 mt-1">
-                                    De <span class="line-through">R$ {{ number_format($upsell['original_price'], 2, ',', '.') }}</span>
-                                    por <span class="font-semibold text-green-600">R$ {{ number_format($upsell['price'], 2, ',', '.') }}</span>
-                                    ({{ $discountPercentage }}% off)
-                                </p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-
+                  
                     <!-- Order Summary -->
                     <div class="bg-white rounded-xl shadow-card p-6">
                         <h2 class="text-lg font-semibold mb-4">Resumo do Pedido</h2>
@@ -824,8 +953,47 @@ fbq('track', 'PageView');
                         <!-- Legal Text -->
                         <div class="text-xs text-gray-500 mt-4">
                             <p>{{ App\Helpers\ConfigHelper::get("copyright_text") }}</p>
-                           
                         </div>
+                    </div>
+
+
+                      <!-- Upsells Section -->
+                    <div class="bg-white rounded-xl shadow-elevated p-6 mb-8">
+                        <h2 class="text-lg font-semibold mb-6">Adicione e Economize Mais</h2>
+
+                        @foreach($upsells as $index => $upsell)
+                        @php
+                        $discountPercentage = round((($upsell['original_price'] - $upsell['price']) / $upsell['original_price']) * 100);
+                        @endphp
+                        <div class="flex items-start gap-4 border rounded-xl p-4 mb-6 upsell-item">
+                            <img src="/storage/{{ $upsell['secondary_banner'] }}"
+                                alt="{{ $upsell['name'] }}"
+                                class="w-16 h-16 rounded-lg object-cover">
+
+                            <div class="flex-1">
+                                <label for="upsell-{{ $index }}" class="font-medium text-sm cursor-pointer block">
+                                    <input type="checkbox"
+                                        id="upsell-{{ $index }}"
+                                        name="upsells[]"
+                                        value="{{ $upsell['id'] }}"
+                                        class="mr-2 h-5 w-5 text-indigo-600 border-gray-300 rounded upsell-checkbox"
+                                        data-price="{{ $upsell['price'] }}"
+                                        data-original-price="{{ $upsell['original_price'] }}"
+                                        data-name="{{ $upsell['name'] }}"
+                                        {{ in_array($upsell['id'], old('upsells', [])) ? 'checked' : '' }}
+                                        @change="updateUpsell('{{ $index }}', $event.target.checked, {{ $upsell['price'] }}, {{ $upsell['original_price'] }}, {{ $upsell['id'] }})">
+                                    {{ $upsell['name'] }} -
+                                    <span class="font-semibold">R$ {{ number_format($upsell['price'], 2, ',', '.') }}</span>
+                                </label>
+
+                                <p class="text-xs text-gray-500 mt-1">
+                                    De <span class="line-through">R$ {{ number_format($upsell['original_price'], 2, ',', '.') }}</span>
+                                    por <span class="font-semibold text-green-600">R$ {{ number_format($upsell['price'], 2, ',', '.') }}</span>
+                                    ({{ $discountPercentage }}% off)
+                                </p>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
 
@@ -877,89 +1045,89 @@ fbq('track', 'PageView');
     </div>
 
     <!-- Modal PIX -->
-   <div id="pix-modal" class="pix-modal" x-show="showPixModal" x-cloak>
-    <div class="pix-content">
-        <!-- Header com ícone -->
-        <div class="text-center mb-4">
-            <div class="pix-success mx-auto">
-                <i class="fas fa-check-circle"></i>
+    <div id="pix-modal" class="pix-modal" x-show="showPixModal" x-cloak>
+        <div class="pix-content">
+            <!-- Header com ícone -->
+            <div class="text-center mb-4">
+                <div class="pix-success mx-auto">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800 mt-2">Pagamento Gerado!</h2>
             </div>
-            <h2 class="text-xl font-bold text-gray-800 mt-2">Pagamento Gerado!</h2>
-        </div>
 
-        <!-- Mensagens consolidadas -->
-        <div class="text-center mb-6">
-            <p class="text-gray-600 text-sm mb-3">
-                <i class="fas fa-qrcode text-indigo-500 mr-1"></i>
-                Escaneie o QR Code ou copie o código PIX
-            </p>
-            <p class="text-gray-500 text-xs">
-                <i class="fas fa-envelope text-indigo-400 mr-1"></i>
-                Enviamos uma cópia para seu e-mail 📧
-            </p>
-            <p class="text-green-600 text-xs font-medium mt-2">
-                <i class="fas fa-clock text-green-500 mr-1"></i>
-                Válido por 30 minutos ⏰
-            </p>
-        </div>
+            <!-- Mensagens consolidadas -->
+            <div class="text-center mb-6">
+                <p class="text-gray-600 text-sm mb-3">
+                    <i class="fas fa-qrcode text-indigo-500 mr-1"></i>
+                    Escaneie o QR Code ou copie o código PIX
+                </p>
+                <p class="text-gray-500 text-xs">
+                    <i class="fas fa-envelope text-indigo-400 mr-1"></i>
+                    Enviamos uma cópia para seu e-mail 📧
+                </p>
+                <p class="text-green-600 text-xs font-medium mt-2">
+                    <i class="fas fa-clock text-green-500 mr-1"></i>
+                    Válido por 30 minutos ⏰
+                </p>
+            </div>
 
-        <!-- QR Code -->
-        <div id="qrcode" class="mb-6 mx-auto" style="max-width: 180px;"></div>
+            <!-- QR Code -->
+            <div id="qrcode" class="mb-6 mx-auto" style="max-width: 180px;"></div>
 
-        <!-- Código PIX -->
-        <div class="mb-6">
-            <p class="text-sm text-gray-600 mb-2 font-medium">
-                <i class="fas fa-copy text-indigo-500 mr-1"></i>
-                Ou copie o código:
-            </p>
-            <div class="flex flex-col sm:flex-row gap-2">
-                <input 
-                    type="text" 
-                    id="pix-code" 
-                    readonly 
-                    class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-gray-50 font-mono truncate" 
-                    :value="pixCode"
-                    x-ref="pixInput"
-                >
+            <!-- Código PIX -->
+            <div class="mb-6">
+                <p class="text-sm text-gray-600 mb-2 font-medium">
+                    <i class="fas fa-copy text-indigo-500 mr-1"></i>
+                    Ou copie o código:
+                </p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input 
+                        type="text" 
+                        id="pix-code" 
+                        readonly 
+                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-xs sm:text-sm bg-gray-50 font-mono truncate" 
+                        :value="pixCode"
+                        x-ref="pixInput"
+                    >
+                    <button 
+                        id="copy-pix" 
+                        class="copy-btn rounded-lg whitespace-nowrap px-4 py-2 text-sm flex items-center justify-center gap-1"
+                        @click="copyPixCode"
+                    >
+                        <i class="fas fa-copy"></i>
+                        Copiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="flex flex-col gap-2">
                 <button 
-                    id="copy-pix" 
-                    class="copy-btn rounded-lg whitespace-nowrap px-4 py-2 text-sm flex items-center justify-center gap-1"
-                    @click="copyPixCode"
+                    id="confirm-payment" 
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    @click="confirmPayment"
                 >
-                    <i class="fas fa-copy"></i>
-                    Copiar
+                    <i class="fas fa-check"></i>
+                    Já Paguei
+                </button>
+                <button 
+                    id="close-pix" 
+                    class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
+                    @click="showPixModal = false"
+                >
+                    Fechar
                 </button>
             </div>
-        </div>
 
-        <!-- Botões -->
-        <div class="flex flex-col gap-2">
-            <button 
-                id="confirm-payment" 
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                @click="confirmPayment"
-            >
-                <i class="fas fa-check"></i>
-                Já Paguei
-            </button>
-            <button 
-                id="close-pix" 
-                class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
-                @click="showPixModal = false"
-            >
-                Fechar
-            </button>
-        </div>
-
-        <!-- Informação adicional -->
-        <div class="mt-4 text-center">
-            <p class="text-xs text-gray-400">
-                <i class="fas fa-info-circle mr-1"></i>
-                Após o pagamento, liberaremos seu acesso em até 5 minutos
-            </p>
+            <!-- Informação adicional -->
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-400">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Após o pagamento, liberaremos seu acesso em até 5 minutos
+                </p>
+            </div>
         </div>
     </div>
-</div>
 
     <script>
         // Configuração do timer de desconto (15 minutos)
@@ -975,11 +1143,11 @@ fbq('track', 'PageView');
             let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
             document.getElementById("countdown-timer").innerHTML =
-                `<span class="bg-white text-red-600 px-2 py-1 rounded font-mono">${minutes}:${seconds < 10 ? '0' + seconds : seconds}</span>`;
+                `<span>${minutes}</span>:<span >${seconds < 10 ? '0' + seconds : seconds}</span>`;
 
             if (timeLeft < 0) {
                 clearInterval(timerInterval);
-                document.getElementById("countdown-timer").innerHTML = "EXPIRADO!";
+                document.getElementById("timerText").innerHTML = "EXPIRADO!";
             }
         }
 
@@ -1004,411 +1172,413 @@ fbq('track', 'PageView');
         }
 
         function checkout() {
-    return {
-        customer: {
-            name: '',
-            email: '',
-            email_confirmation: '',
-            phone: ''
-        },
-        fields: {
-            name: false,
-            email: false,
-            email_confirmation: false,
-            phone: false
-        },
-        errors: {
-            name: '',
-            email: '',
-            email_confirmation: '',
-            phone: '',
-            recaptcha: ''
-        },
-        selectedUpsells: [],
-        total: {{ $mainProduct['price'] }},
-        totalSavings: {{ $mainProduct['original_price'] - $mainProduct['price'] }},
-        isProcessing: false,
-        showPixModal: false,
-        pixCode: '',
-        
-        init() {
-            // Inicializar com valores do old() se existirem
-            @if(old('name'))
-                this.customer.name = '{{ old('name') }}';
-                this.fields.name = true;
-            @endif
-            @if(old('email'))
-                this.customer.email = '{{ old('email') }}';
-                this.fields.email = true;
-            @endif
-            @if(old('email_confirmation'))
-                this.customer.email_confirmation = '{{ old('email_confirmation') }}';
-                this.fields.email_confirmation = true;
-            @endif
-            @if(old('phone'))
-                this.customer.phone = '{{ old('phone') }}';
-                this.fields.phone = true;
-            @endif
-            
-            // Inicializar upsells selecionados
-            @if(old('upsells'))
-                @foreach(old('upsells') as $upsellId)
-                    @foreach($upsells as $index => $upsell)
-                        @if($upsell['id'] == $upsellId)
-                            this.updateUpsell('{{ $index }}', true, {{ $upsell['price'] }}, {{ $upsell['original_price'] }}, {{ $upsell['id'] }});
+            return {
+                customer: {
+                    name: '',
+                    email: '',
+                    email_confirmation: '',
+                    phone: ''
+                },
+                fields: {
+                    name: false,
+                    email: false,
+                    email_confirmation: false,
+                    phone: false
+                },
+                errors: {
+                    name: '',
+                    email: '',
+                    email_confirmation: '',
+                    phone: '',
+                    recaptcha: ''
+                },
+                selectedUpsells: [],
+                total: {{ $mainProduct['price'] }},
+                totalSavings: {{ $mainProduct['original_price'] - $mainProduct['price'] }},
+                isProcessing: false,
+                showPixModal: false,
+                pixCode: '',
+                features: @json($mainProduct['features']),
+                
+                init() {
+                    // Inicializar com valores do old() se existirem
+                    @if(old('name'))
+                        this.customer.name = '{{ old('name') }}';
+                        this.fields.name = true;
+                    @endif
+                    @if(old('email'))
+                        this.customer.email = '{{ old('email') }}';
+                        this.fields.email = true;
+                    @endif
+                    @if(old('email_confirmation'))
+                        this.customer.email_confirmation = '{{ old('email_confirmation') }}';
+                        this.fields.email_confirmation = true;
+                    @endif
+                    @if(old('phone'))
+                        this.customer.phone = '{{ old('phone') }}';
+                        this.fields.phone = true;
+                    @endif
+                    
+                    // Inicializar upsells selecionados
+                    @if(old('upsells'))
+                        @foreach(old('upsells') as $upsellId)
+                            @foreach($upsells as $index => $upsell)
+                                @if($upsell['id'] == $upsellId)
+                                    this.updateUpsell('{{ $index }}', true, {{ $upsell['price'] }}, {{ $upsell['original_price'] }}, {{ $upsell['id'] }});
+                                @endif
+                            @endforeach
+                        @endforeach
+                    @endif
+                },
+                
+                validateField(field) {
+                    this.fields[field] = true;
+                    
+                    switch(field) {
+                        case 'name':
+                            this.errors.name = this.customer.name ? '' : 'Nome é obrigatório.';
+                            break;
+                        case 'email':
+                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!this.customer.email) {
+                                this.errors.email = 'E-mail é obrigatório.';
+                            } else if (!emailRegex.test(this.customer.email)) {
+                                this.errors.email = 'E-mail inválido.';
+                            } else {
+                                this.errors.email = '';
+                            }
+                            break;
+                        case 'email_confirmation':
+                            if (this.customer.email !== this.customer.email_confirmation) {
+                                this.errors.email_confirmation = 'Os e-mails não coincidem.';
+                            } else {
+                                this.errors.email_confirmation = '';
+                            }
+                            break;
+                        case 'phone':
+                            const phone = this.customer.phone.replace(/\D/g, '');
+                            if (!this.customer.phone) {
+                                this.errors.phone = 'Telefone é obrigatório.';
+                            } else if (phone.length < 10) {
+                                this.errors.phone = 'Telefone inválido. Digite o DDD + número.';
+                            } else if (phone.length > 11) {
+                                this.errors.phone = 'Telefone muito longo.';
+                            } else {
+                                this.errors.phone = '';
+                            }
+                            break;
+                    }
+                },
+                
+                formatPhone() {
+                    // Salvar posição do cursor
+                    const input = event.target;
+                    const cursorPosition = input.selectionStart;
+                    const originalValue = this.customer.phone;
+                    
+                    let value = this.customer.phone.replace(/\D/g, '');
+                    
+                    // Limitar a 11 dígitos
+                    if (value.length > 11) {
+                        value = value.substring(0, 11);
+                    }
+                    
+                    // Aplicar máscara
+                    let formattedValue = value;
+                    
+                    if (value.length > 2) {
+                        formattedValue = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+                    }
+                    if (value.length > 6) {
+                        formattedValue = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
+                    }
+                    if (value.length > 7) {
+                        formattedValue = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+                    }
+                    
+                    this.customer.phone = formattedValue;
+                    
+                    // Restaurar posição do cursor (ajustada para a máscara)
+                    setTimeout(() => {
+                        let newCursorPosition = cursorPosition;
+                        
+                        // Ajustar posição baseado na formatação
+                        if (value.length <= 2 && originalValue.length <= 2) {
+                            // Dentro do DDD - mantém posição
+                            newCursorPosition = cursorPosition;
+                        } else if (cursorPosition === 2 && value.length > 2) {
+                            // Após o DDD - move para após o parêntese
+                            newCursorPosition = 3;
+                        } else if (cursorPosition === 3 && originalValue.length === 2 && value.length > 2) {
+                            // Após adicionar parêntese - move para espaço
+                            newCursorPosition = 4;
+                        } else if (cursorPosition >= 3 && value.length > 2) {
+                            // Ajustar para posições após formatação
+                            newCursorPosition = cursorPosition + 2;
+                        }
+                        
+                        input.setSelectionRange(newCursorPosition, newCursorPosition);
+                    }, 0);
+                },
+                
+                phoneKeydown(event) {
+                    // Permitir apenas teclas numéricas e teclas de controle
+                    const allowedKeys = [
+                        'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 
+                        'ArrowLeft', 'ArrowRight', 'Home', 'End'
+                    ];
+                    
+                    if (allowedKeys.includes(event.key) || 
+                        (event.key >= '0' && event.key <= '9') ||
+                        (event.ctrlKey || event.metaKey)) {
+                        return true;
+                    }
+                    
+                    event.preventDefault();
+                    return false;
+                },
+                
+                validateForm() {
+                    // Validar todos os campos
+                    this.validateField('name');
+                    this.validateField('email');
+                    this.validateField('email_confirmation');
+                    this.validateField('phone');
+                    
+                    // Validar reCAPTCHA
+                    let recaptchaValid = true;
+                    @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
+                        if (typeof grecaptcha !== 'undefined') {
+                            const recaptchaResponse = grecaptcha.getResponse();
+                            if (!recaptchaResponse) {
+                                this.errors.recaptcha = 'Por favor, complete o reCAPTCHA.';
+                                recaptchaValid = false;
+                            } else {
+                                this.errors.recaptcha = '';
+                            }
+                        } else {
+                            this.errors.recaptcha = 'reCAPTCHA não carregado. Recarregue a página.';
+                            recaptchaValid = false;
+                        }
+                    @endif
+                    
+                    // Verificar se há erros
+                    const hasErrors = Object.values(this.errors).some(error => error !== '');
+                    
+                    return !hasErrors && recaptchaValid;
+                },
+                
+                formatPrice(price) {
+                    return price.toFixed(2).replace('.', ',');
+                },
+                
+                updateUpsell(index, isChecked, price, original_price, id) {
+                    if (isChecked) {
+                        this.selectedUpsells.push({
+                            index,
+                            id,
+                            name: document.querySelector(`#upsell-${index}`).getAttribute('data-name'),
+                            price: price,
+                            original_price: original_price
+                        });
+                        this.total += price;
+                        this.totalSavings += (original_price - price);
+                    } else {
+                        const upsellIndex = this.selectedUpsells.findIndex(item => item.index === index);
+                        if (upsellIndex !== -1) {
+                            this.total -= this.selectedUpsells[upsellIndex].price;
+                            this.totalSavings -= (this.selectedUpsells[upsellIndex].original_price - this.selectedUpsells[upsellIndex].price);
+                            this.selectedUpsells.splice(upsellIndex, 1);
+                        }
+                    }
+                },
+                
+                async processPayment() {
+                    if (!this.validateForm()) {
+                        // Encontrar o primeiro campo com erro
+                        const firstErrorField = Object.keys(this.errors).find(key => this.errors[key] !== '');
+                        if (firstErrorField) {
+                            const element = document.querySelector(`[x-model="customer.${firstErrorField}"]`) || 
+                                          document.querySelector('.recaptcha-error');
+                            if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                element.focus();
+                            }
+                        }
+                        return;
+                    }
+                    
+                    this.isProcessing = true;
+                    
+                    try {
+                        // Coletar dados do formulário
+                        const formData = new FormData();
+                        formData.append('_token', '{{ csrf_token() }}');
+                        formData.append('product_id', '{{ $mainProduct["id"] }}');
+                        formData.append('name', this.customer.name);
+                        formData.append('email', this.customer.email);
+                        formData.append('email_confirmation', this.customer.email_confirmation);
+                        
+                        // Limpar máscara do telefone antes de enviar
+                        const cleanPhone = this.customer.phone.replace(/\D/g, '');
+                        formData.append('phone', cleanPhone);
+                        
+                        // Adicionar upsells selecionados
+                        this.selectedUpsells.forEach(upsell => {
+                            formData.append('upsells[]', upsell.id);
+                        });
+                        
+                        // Adicionar reCAPTCHA
+                        @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
+                            if (typeof grecaptcha !== 'undefined') {
+                                const recaptchaResponse = grecaptcha.getResponse();
+                                if (recaptchaResponse) {
+                                    formData.append('g-recaptcha-response', recaptchaResponse);
+                                }
+                            }
                         @endif
-                    @endforeach
-                @endforeach
-            @endif
-        },
-        
-        validateField(field) {
-            this.fields[field] = true;
-            
-            switch(field) {
-                case 'name':
-                    this.errors.name = this.customer.name ? '' : 'Nome é obrigatório.';
-                    break;
-                case 'email':
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!this.customer.email) {
-                        this.errors.email = 'E-mail é obrigatório.';
-                    } else if (!emailRegex.test(this.customer.email)) {
-                        this.errors.email = 'E-mail inválido.';
-                    } else {
-                        this.errors.email = '';
-                    }
-                    break;
-                case 'email_confirmation':
-                    if (this.customer.email !== this.customer.email_confirmation) {
-                        this.errors.email_confirmation = 'Os e-mails não coincidem.';
-                    } else {
-                        this.errors.email_confirmation = '';
-                    }
-                    break;
-                case 'phone':
-                    const phone = this.customer.phone.replace(/\D/g, '');
-                    if (!this.customer.phone) {
-                        this.errors.phone = 'Telefone é obrigatório.';
-                    } else if (phone.length < 10) {
-                        this.errors.phone = 'Telefone inválido. Digite o DDD + número.';
-                    } else if (phone.length > 11) {
-                        this.errors.phone = 'Telefone muito longo.';
-                    } else {
-                        this.errors.phone = '';
-                    }
-                    break;
-            }
-        },
-        
-       formatPhone() {
-    // Salvar posição do cursor
-    const input = event.target;
-    const cursorPosition = input.selectionStart;
-    const originalValue = this.customer.phone;
-    
-    let value = this.customer.phone.replace(/\D/g, '');
-    
-    // Limitar a 11 dígitos
-    if (value.length > 11) {
-        value = value.substring(0, 11);
-    }
-    
-    // Aplicar máscara
-    let formattedValue = value;
-    
-    if (value.length > 2) {
-        formattedValue = `(${value.substring(0, 2)}) ${value.substring(2)}`;
-    }
-    if (value.length > 6) {
-        formattedValue = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
-    }
-    if (value.length > 7) {
-        formattedValue = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
-    }
-    
-    this.customer.phone = formattedValue;
-    
-    // Restaurar posição do cursor (ajustada para a máscara)
-    setTimeout(() => {
-        let newCursorPosition = cursorPosition;
-        
-        // Ajustar posição baseado na formatação
-        if (value.length <= 2 && originalValue.length <= 2) {
-            // Dentro do DDD - mantém posição
-            newCursorPosition = cursorPosition;
-        } else if (cursorPosition === 2 && value.length > 2) {
-            // Após o DDD - move para após o parêntese
-            newCursorPosition = 3;
-        } else if (cursorPosition === 3 && originalValue.length === 2 && value.length > 2) {
-            // Após adicionar parêntese - move para espaço
-            newCursorPosition = 4;
-        } else if (cursorPosition >= 3 && value.length > 2) {
-            // Ajustar para posições após formatação
-            newCursorPosition = cursorPosition + 2;
-        }
-        
-        input.setSelectionRange(newCursorPosition, newCursorPosition);
-    }, 0);
-},
-        
-        phoneKeydown(event) {
-            // Permitir apenas teclas numéricas e teclas de controle
-            const allowedKeys = [
-                'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 
-                'ArrowLeft', 'ArrowRight', 'Home', 'End'
-            ];
-            
-            if (allowedKeys.includes(event.key) || 
-                (event.key >= '0' && event.key <= '9') ||
-                (event.ctrlKey || event.metaKey)) {
-                return true;
-            }
-            
-            event.preventDefault();
-            return false;
-        },
-        
-        validateForm() {
-            // Validar todos os campos
-            this.validateField('name');
-            this.validateField('email');
-            this.validateField('email_confirmation');
-            this.validateField('phone');
-            
-            // Validar reCAPTCHA
-            let recaptchaValid = true;
-            @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
-                if (typeof grecaptcha !== 'undefined') {
-                    const recaptchaResponse = grecaptcha.getResponse();
-                    if (!recaptchaResponse) {
-                        this.errors.recaptcha = 'Por favor, complete o reCAPTCHA.';
-                        recaptchaValid = false;
-                    } else {
-                        this.errors.recaptcha = '';
-                    }
-                } else {
-                    this.errors.recaptcha = 'reCAPTCHA não carregado. Recarregue a página.';
-                    recaptchaValid = false;
-                }
-            @endif
-            
-            // Verificar se há erros
-            const hasErrors = Object.values(this.errors).some(error => error !== '');
-            
-            return !hasErrors && recaptchaValid;
-        },
-        
-        formatPrice(price) {
-            return price.toFixed(2).replace('.', ',');
-        },
-        
-        updateUpsell(index, isChecked, price, original_price, id) {
-            if (isChecked) {
-                this.selectedUpsells.push({
-                    index,
-                    id,
-                    name: document.querySelector(`#upsell-${index}`).getAttribute('data-name'),
-                    price: price,
-                    original_price: original_price
-                });
-                this.total += price;
-                this.totalSavings += (original_price - price);
-            } else {
-                const upsellIndex = this.selectedUpsells.findIndex(item => item.index === index);
-                if (upsellIndex !== -1) {
-                    this.total -= this.selectedUpsells[upsellIndex].price;
-                    this.totalSavings -= (this.selectedUpsells[upsellIndex].original_price - this.selectedUpsells[upsellIndex].price);
-                    this.selectedUpsells.splice(upsellIndex, 1);
-                }
-            }
-        },
-        
-        async processPayment() {
-            if (!this.validateForm()) {
-                // Encontrar o primeiro campo com erro
-                const firstErrorField = Object.keys(this.errors).find(key => this.errors[key] !== '');
-                if (firstErrorField) {
-                    const element = document.querySelector(`[x-model="customer.${firstErrorField}"]`) || 
-                                  document.querySelector('.recaptcha-error');
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        element.focus();
-                    }
-                }
-                return;
-            }
-            
-            this.isProcessing = true;
-            
-            try {
-                // Coletar dados do formulário
-                const formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('product_id', '{{ $mainProduct["id"] }}');
-                formData.append('name', this.customer.name);
-                formData.append('email', this.customer.email);
-                formData.append('email_confirmation', this.customer.email_confirmation);
-                
-                // Limpar máscara do telefone antes de enviar
-                const cleanPhone = this.customer.phone.replace(/\D/g, '');
-                formData.append('phone', cleanPhone);
-                
-                // Adicionar upsells selecionados
-                this.selectedUpsells.forEach(upsell => {
-                    formData.append('upsells[]', upsell.id);
-                });
-                
-                // Adicionar reCAPTCHA
-                @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
-                    if (typeof grecaptcha !== 'undefined') {
-                        const recaptchaResponse = grecaptcha.getResponse();
-                        if (recaptchaResponse) {
-                            formData.append('g-recaptcha-response', recaptchaResponse);
+                        
+                        // Enviar via AJAX
+                        const response = await fetch('{{ route("checkout.process") }}', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            // LIMPAR TODOS OS CAMPOS APÓS SUCESSO
+                            this.resetForm();
+                            
+                            this.pixCode = data.order.pix_code;
+                            this.showPixModal = true;
+                            
+                            // Gerar QR Code
+                            const qrElement = document.getElementById('qrcode');
+                            qrElement.innerHTML = '';
+                            
+                            const canvas = document.createElement('canvas');
+                            qrElement.appendChild(canvas);
+                            
+                            QRCode.toCanvas(canvas, this.pixCode, { width: 200 }, function(error) {
+                                if (error) {
+                                    console.error(error);
+                                    qrElement.innerHTML = '<div class="text-red-500">Erro ao gerar QR Code</div>';
+                                }
+                            });
+                            
+                        } else {
+                            // EM CASO DE ERRO, LIMPAR APENAS O CAPTCHA
+                            @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
+                                if (typeof grecaptcha !== 'undefined') {
+                                    grecaptcha.reset();
+                                }
+                            @endif
+                            
+                            // Limpar erro do captcha se houver
+                            this.errors.recaptcha = '';
+                            
+                            showNotification('error', data.message || 'Erro ao processar pagamento.');
                         }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        
+                        // EM CASO DE ERRO DE REDE, LIMPAR O CAPTCHA
+                        @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
+                            if (typeof grecaptcha !== 'undefined') {
+                                grecaptcha.reset();
+                            }
+                        @endif
+                        
+                        showNotification('error', 'Erro ao processar pagamento.');
+                    } finally {
+                        this.isProcessing = false;
                     }
-                @endif
+                },
                 
-                // Enviar via AJAX
-                const response = await fetch('{{ route("checkout.process") }}', {
-                    method: 'POST',
-                    body: formData
-                });
+                copyPixCode() {
+                    this.$refs.pixInput.select();
+                    document.execCommand('copy');
+                    
+                    // Feedback visual
+                    const button = document.getElementById('copy-pix');
+                    const originalText = button.innerHTML;
+                    
+                    button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+                    button.style.background = '#10b981';
+                    
+                    showNotification('success', 'Código PIX copiado! ✔️');
+                    
+                    // Reset após 2 segundos
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.background = '';
+                    }, 2000);
+                },
                 
-                const data = await response.json();
+                confirmPayment() {
+                    document.getElementById('checkout-form').submit();
+                },
                 
-                if (data.success) {
-                    // LIMPAR TODOS OS CAMPOS APÓS SUCESSO
-                    this.resetForm();
+                resetForm() {
+                    this.customer = {
+                        name: '',
+                        email: '',
+                        email_confirmation: '',
+                        phone: ''
+                    };
+                    this.fields = {
+                        name: false,
+                        email: false,
+                        email_confirmation: false,
+                        phone: false
+                    };
+                    this.errors = {
+                        name: '',
+                        email: '',
+                        email_confirmation: '',
+                        phone: '',
+                        recaptcha: ''
+                    };
+                    this.selectedUpsells = [];
+                    this.total = {{ $mainProduct['price'] }};
+                    this.totalSavings = {{ $mainProduct['original_price'] - $mainProduct['price'] }};
                     
-                    this.pixCode = data.order.pix_code;
-                    this.showPixModal = true;
-                    
-                    // Gerar QR Code
-                    const qrElement = document.getElementById('qrcode');
-                    qrElement.innerHTML = '';
-                    
-                    const canvas = document.createElement('canvas');
-                    qrElement.appendChild(canvas);
-                    
-                    QRCode.toCanvas(canvas, this.pixCode, { width: 200 }, function(error) {
-                        if (error) {
-                            console.error(error);
-                            qrElement.innerHTML = '<div class="text-red-500">Erro ao gerar QR Code</div>';
-                        }
+                    // Resetar todos os checkboxes de upsells
+                    document.querySelectorAll('input[type="checkbox"][name="upsells[]"]').forEach(checkbox => {
+                        checkbox.checked = false;
                     });
                     
-                } else {
-                    // EM CASO DE ERRO, LIMPAR APENAS O CAPTCHA
+                    // Resetar reCAPTCHA
                     @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
                         if (typeof grecaptcha !== 'undefined') {
                             grecaptcha.reset();
                         }
                     @endif
-                    
-                    // Limpar erro do captcha se houver
-                    this.errors.recaptcha = '';
-                    
-                    showNotification('error', data.message || 'Erro ao processar pagamento.');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                
-                // EM CASO DE ERRO DE REDE, LIMPAR O CAPTCHA
-                @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
-                    if (typeof grecaptcha !== 'undefined') {
-                        grecaptcha.reset();
-                    }
-                @endif
-                
-                showNotification('error', 'Erro ao processar pagamento.');
-            } finally {
-                this.isProcessing = false;
-            }
-        },
-        
-        copyPixCode() {
-    this.$refs.pixInput.select();
-    document.execCommand('copy');
-    
-    // Feedback visual
-    const button = document.getElementById('copy-pix');
-    const originalText = button.innerHTML;
-    
-    button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-    button.style.background = '#10b981';
-    
-    showNotification('success', 'Código PIX copiado! ✔️');
-    
-    // Reset após 2 segundos
-    setTimeout(() => {
-        button.innerHTML = originalText;
-        button.style.background = '';
-    }, 2000);
-},
-        
-        confirmPayment() {
-            document.getElementById('checkout-form').submit();
-        },
-        
-        resetForm() {
-            this.customer = {
-                name: '',
-                email: '',
-                email_confirmation: '',
-                phone: ''
             };
-            this.fields = {
-                name: false,
-                email: false,
-                email_confirmation: false,
-                phone: false
-            };
-            this.errors = {
-                name: '',
-                email: '',
-                email_confirmation: '',
-                phone: '',
-                recaptcha: ''
-            };
-            this.selectedUpsells = [];
-            this.total = {{ $mainProduct['price'] }};
-            this.totalSavings = {{ $mainProduct['original_price'] - $mainProduct['price'] }};
-            
-            // Resetar todos os checkboxes de upsells
-            document.querySelectorAll('input[type="checkbox"][name="upsells[]"]').forEach(checkbox => {
-                checkbox.checked = false;
-            });
-            
-            // Resetar reCAPTCHA
-            @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
-                if (typeof grecaptcha !== 'undefined') {
-                    grecaptcha.reset();
-                }
-            @endif
         }
-    };
-}
 
-// Adicione esta função para fechar o modal ao clicar fora
-document.addEventListener('click', (e) => {
-    const pixModal = document.getElementById('pix-modal');
-    const pixContent = document.querySelector('.pix-content');
-    
-    if (pixModal && pixModal.style.display === 'flex' && 
-        !pixContent.contains(e.target) && 
-        !e.target.closest('.pix-content')) {
-        this.showPixModal = false;
-    }
-});
+        // Adicione esta função para fechar o modal ao clicar fora
+        document.addEventListener('click', (e) => {
+            const pixModal = document.getElementById('pix-modal');
+            const pixContent = document.querySelector('.pix-content');
+            
+            if (pixModal && pixModal.style.display === 'flex' && 
+                !pixContent.contains(e.target) && 
+                !e.target.closest('.pix-content')) {
+                this.showPixModal = false;
+            }
+        });
 
-// Adicione suporte a tecla ESC para fechar
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && this.showPixModal) {
-        this.showPixModal = false;
-    }
-});
+        // Adicione suporte a tecla ESC para fechar
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.showPixModal) {
+                this.showPixModal = false;
+            }
+        });
+
+        
     </script>
 </body>
-
 </html>

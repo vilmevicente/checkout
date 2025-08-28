@@ -208,6 +208,7 @@ public function update(Request $request, Product $product)
     // Primeiro, validar os campos básicos
     $validated = $request->validate([
         'name' => 'required|string|max:255',
+        'slug' => 'nullable|string|max:255|unique:products,slug,' . $product->id,
         'price' => 'required|numeric|min:0',
         'original_price' => 'nullable|numeric|min:0',
         'description' => 'nullable|string',
@@ -393,4 +394,64 @@ public function update(Request $request, Product $product)
         return redirect()->route('admin.products.index')
                          ->with('success', 'Produto excluído com sucesso!');
     }
+
+
+    public function duplicar(Product $product)
+{
+    // Carregar todos os relacionamentos necessários
+    $product->load(['features', 'testimonials', 'upsells', 'deliveryMethods', 'attachments']);
+
+    // Clonar os dados básicos do produto
+    $newProduct = $product->replicate();
+    $newProduct->name = $product->name . ' (Cópia)';
+    $newProduct->is_active = false; // opcional: deixa inativo por padrão
+    $newProduct->push();
+
+    // Clonar relacionamentos 1:N (features, testimonials, attachments)
+    foreach ($product->features as $feature) {
+        $newProduct->features()->create($feature->replicate()->toArray());
+    }
+
+    foreach ($product->testimonials as $testimonial) {
+        $newProduct->testimonials()->create($testimonial->replicate()->toArray());
+    }
+
+    foreach ($product->attachments as $attachment) {
+        // Clonar arquivo físico também, se existir
+        $newPath = null;
+        if ($attachment->file_path && \Storage::disk('public')->exists($attachment->file_path)) {
+            $fileContents = \Storage::disk('public')->get($attachment->file_path);
+            $pathInfo = pathinfo($attachment->file_path);
+            $newPath = $pathInfo['dirname'].'/'.uniqid().'_'.$pathInfo['basename'];
+            \Storage::disk('public')->put($newPath, $fileContents);
+        }
+
+        $newProduct->attachments()->create([
+            'name' => $attachment->name,
+            'file_path' => $newPath ?? $attachment->file_path,
+            'original_name' => $attachment->original_name,
+            'mime_type' => $attachment->mime_type,
+            'size' => $attachment->size,
+            'order' => $attachment->order,
+            'is_active' => $attachment->is_active,
+        ]);
+    }
+
+    // Clonar relacionamentos N:N (delivery methods e upsells)
+    $newProduct->deliveryMethods()->sync($product->deliveryMethods->pluck('id')->toArray());
+
+    $upsellsData = [];
+    foreach ($product->upsells as $index => $upsell) {
+        $upsellsData[$upsell->id] = [
+            'order' => $index,
+            'discount_price' => $upsell->pivot->discount_price,
+            'is_active' => $upsell->pivot->is_active,
+        ];
+    }
+    $newProduct->upsells()->sync($upsellsData);
+
+    return redirect()->route('admin.products.edit', $newProduct->slug)
+                     ->with('success', 'Produto duplicado com sucesso!');
+}
+
 }

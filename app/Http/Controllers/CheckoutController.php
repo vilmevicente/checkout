@@ -114,7 +114,7 @@ protected $pagFanService;
                 $order->reference,
                 [
                     'name' => $order->customer_name,
-                    'document' => "000.000.000-00", // CPF genérico
+                    'document' => "", // CPF genérico
                     'email' => $order->customer_email,
                 ],
                 $order->reference
@@ -125,7 +125,17 @@ protected $pagFanService;
                 \DB::rollBack();
                 \Log::error('Falha ao gerar PIX: QRCode vazio', [
                     'order_id' => $order->id,
-                    'response' => $response
+                    'response' => $response,
+                    'request' => [
+                        $order->total,
+                $order->reference,
+                [
+                    'name' => $order->customer_name,
+                    'document' => "", // CPF genérico
+                    'email' => $order->customer_email,
+                ],
+                $order->reference
+                    ]
                 ]);
 
                 return response()->json([

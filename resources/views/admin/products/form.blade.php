@@ -32,6 +32,7 @@
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                 </div>
 
+                
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Preço *</label>
@@ -45,6 +46,22 @@
                     </div>
                 </div>
             </div>
+
+            <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
+    <input type="text" name="slug"
+           value="{{ old('slug', isset($product) ? $product->slug : '') }}"
+           @if(!isset($product)) disabled @endif
+           class="w-full px-4 py-2 border border-gray-300 rounded-lg 
+                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition 
+                  {{ !isset($product) ? 'bg-gray-100 cursor-not-allowed' : '' }}">
+    @if(!isset($product))
+        <p class="text-xs text-gray-500 mt-1">O slug será gerado automaticamente ao criar o produto.</p>
+    @else
+        <p class="text-xs text-gray-500 mt-1">Edite o slug somente se necessário (isso altera o link do produto).</p>
+    @endif
+</div>
+
 
             <div class="mt-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Descrição</label>

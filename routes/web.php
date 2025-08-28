@@ -10,26 +10,24 @@ use App\Http\Controllers\Admin\UpsellController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\ProductController;
 
-
-
-
-
-
-
-
 // Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
     // Banners
     Route::resource('banners', BannerController::class);
     Route::post('banners/order', [BannerController::class, 'updateOrder'])->name('banners.order');
     
-    
+    // Products - PRIMEIRO a rota resource
     Route::resource('products', ProductController::class);
     
+    // DEPOIS a rota adicional duplicar
+    Route::get('products/{product}/duplicar', [ProductController::class, 'duplicar'])
+         ->name('products.duplicate');
+    
     Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
-Route::patch('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [AdminProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Upsells
@@ -47,6 +45,5 @@ Route::patch('/profile', [AdminProfileController::class, 'update'])->name('profi
 // Frontend Routes (for checkout page)
 Route::get('/checkout/{slug}', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-
 
 require __DIR__.'/auth.php';

@@ -92,6 +92,8 @@ class PagFanService
                 'postbackUrl' => $postbackUrl,
             ];
 
+            \Log::info('Payload para gerar QRCode PagFan', $payload);
+
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token}",
                 'Content-Type' => 'application/json',

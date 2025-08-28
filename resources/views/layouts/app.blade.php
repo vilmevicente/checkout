@@ -104,30 +104,32 @@
             </nav>
 
             <!-- User section -->
-            <div class="border-t border-gray-700 p-4">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="h-10 w-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
-                    </div>
-                    <div x-show="sidebarOpen" class="ml-3 transition-opacity duration-300">
-                        <p class="text-sm font-medium text-white">{{ auth()->user()->name }}</p>
-                        <p class="text-xs font-medium text-gray-400">{{ auth()->user()->email }}</p>
-                    </div>
-                </div>
-                
-                <!-- Logout form -->
-                <form method="POST" action="{{ route('logout') }}" class="mt-4">
-                    @csrf
-                    <button type="submit" class="group flex items-center w-full px-2 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 transition-colors duration-200">
-                        <svg class="h-5 w-5" :class="sidebarOpen ? 'mr-3' : 'mx-auto'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                        </svg>
-                        <span x-show="sidebarOpen" class="transition-opacity duration-300">Sair</span>
-                    </button>
-                </form>
+          <!-- User section -->
+<div class="border-t border-gray-700 p-4">
+    <a href="{{ route('admin.profile.edit') }}" class="flex items-center cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-colors duration-200">
+        <div class="flex-shrink-0">
+            <div class="h-10 w-10 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
+        </div>
+        <div x-show="sidebarOpen" class="ml-3 transition-opacity duration-300">
+            <p class="text-sm font-medium text-white">{{ auth()->user()->name }}</p>
+            <p class="text-xs font-medium text-gray-400">{{ auth()->user()->email }}</p>
+        </div>
+    </a>
+
+    <!-- Logout form -->
+    <form method="POST" action="{{ route('logout') }}" class="mt-4">
+        @csrf
+        <button type="submit" class="group flex items-center w-full px-2 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 transition-colors duration-200">
+            <svg class="h-5 w-5" :class="sidebarOpen ? 'mr-3' : 'mx-auto'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            <span x-show="sidebarOpen" class="transition-opacity duration-300">Sair</span>
+        </button>
+    </form>
+</div>
+
         </aside>
 
         <!-- Main content -->

@@ -135,7 +135,12 @@
                 </form>
             </div>
 
-            <!-- Excluir Conta -->
+           
+    </div>
+@endsection
+@section('vv')
+
+ <!-- Excluir Conta -->
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900">Excluir Conta</h2>
                 <p class="mt-1 text-sm text-gray-600">Uma vez que sua conta seja excluída, todos os seus recursos e dados serão permanentemente apagados.</p>
@@ -184,5 +189,4 @@
                 </div>
             </div>
         </div>
-    </div>
 @endsection
