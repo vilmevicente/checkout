@@ -11,7 +11,7 @@
 
             <!-- Título -->
             <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
-                {{ __('Welcome back 👋') }}
+                {{ __('Bem vindo de volta 👋') }}
             </h2>
 
             <!-- Session Status -->

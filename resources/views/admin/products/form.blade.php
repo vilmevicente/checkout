@@ -264,78 +264,75 @@
 
       <!-- Métodos de Entrega -->
 <!-- Métodos de Entrega -->
-<div class="mb-8">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-        <i class="fas fa-paper-plane mr-2 text-blue-500"></i> Métodos de Entrega *
-    </h2>
+  <!-- Métodos de Entrega -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+            <i class="fas fa-paper-plane mr-2 text-blue-500"></i> Métodos de Entrega *
+        </h2>
 
-    <div>
-        <select name="delivery_methods[]" 
-                x-model="formData.delivery_methods"
-                multiple
-                size="1"
-                @change="requiresFiles = ($event.target.options[$event.target.selectedIndex]?.text.includes('arquivos'))"
-                class="w-full mb-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            <option value="">Selecione um método</option>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($deliveryMethods as $method)
-                <option value="{{ $method->id }}">
-                    {{ $method->name }}
-                </option>
+                <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition">
+                    <input type="radio"
+                           name="delivery_method"
+                           value="{{ $method->id }}"
+                           :checked="formData.delivery_method == {{ $method->id }}"
+                           @change="selectDeliveryMethod({{ $method->id }})"
+                           class="mr-3 h-5 w-5 text-blue-600 focus:ring-blue-500">
+                    <span class="text-sm font-medium text-gray-700">{{ $method->name }}</span>
+                </label>
             @endforeach
-        </select>
+        </div>
+
+        <input type="hidden" name="delivery_method" :value="formData.delivery_method">
     </div>
-</div>
 
+    <!-- Aviso -->
+    <div x-show="requiresFiles" class="mt-2 text-sm text-red-500">
+        Este método requer arquivos.
+    </div>
 
+    <!-- Anexos -->
+    <div class="mb-8" x-show="requiresFiles" x-cloak>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+            <i class="fas fa-paperclip mr-2"></i> Anexos *
+        </h2>
 
-
-        <!-- Anexos (Condicional) -->
-        <div class="mb-8" x-show="requiresFiles">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                <i class="fas fa-paperclip mr-2"></i> Anexos *
-            </h2>
-            
-            <div id="attachments-container" class="space-y-4">
-                <template x-for="(attachment, index) in formData.attachments" :key="index">
-                    <div class="attachment-item p-4 border border-gray-200 rounded-lg bg-gray-50">
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-                            <div class="md:col-span-5">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Arquivo *</label>
-                                <input type="text" :name="`attachments[${index}][name]`" x-model="attachment.name" 
-                                       :required="requiresFiles"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                            </div>
-                            <div class="md:col-span-5">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    <span x-text="attachment.id ? 'Substituir arquivo (opcional)' : 'Selecionar arquivo *'"></span>
-                                </label>
-                                <input type="file" :name="`attachments[${index}][file]`" 
-                                       @change="attachment.file = $event.target.files[0]"
-                                       :required="requiresFiles && !attachment.id"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                <template x-if="attachment.id">
-                                    <p class="text-xs text-gray-500 mt-1">
-                                        Arquivo atual: <span x-text="attachment.original_name"></span>
-                                        (<span x-text="attachment.formatted_size"></span>)
-                                    </p>
-                                </template>
-                                <input type="hidden" :name="`attachments[${index}][id]`" x-model="attachment.id">
-                            </div>
-                            <div class="md:col-span-2 flex items-end">
-                                <button type="button" @click="removeAttachment(index)" 
-                                        class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
+        <div id="attachments-container" class="space-y-4">
+            <template x-for="(attachment, index) in formData.attachments" :key="index">
+                <div class="attachment-item p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                        <div class="md:col-span-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Arquivo *</label>
+                            <input type="text" :name="`attachments[${index}][name]`" x-model="attachment.name" 
+                                   required
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div class="md:col-span-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <span x-text="attachment.id ? 'Substituir arquivo (opcional)' : 'Selecionar arquivo *'"></span>
+                            </label>
+                            <input type="file" :name="`attachments[${index}][file]`" 
+                                   @change="attachment.file = $event.target.files[0]"
+                                   :required="!attachment.id"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <input type="hidden" :name="`attachments[${index}][id]`" x-model="attachment.id">
+                        </div>
+                        <div class="md:col-span-2 flex items-end">
+                            <button type="button" @click="removeAttachment(index)" 
+                                    class="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
-                </template>
-            </div>
-
-            <button type="button" @click="addAttachment" class="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
-                <i class="fas fa-plus mr-2"></i> Adicionar Anexo
-            </button>
+                </div>
+            </template>
         </div>
+
+        <button type="button" @click="addAttachment" class="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg transition">
+            <i class="fas fa-plus mr-2"></i> Adicionar Anexo
+        </button>
+    </div>
 
         <!-- Status -->
         <div class="mb-8">
@@ -379,11 +376,14 @@ function productForm() {
         requiresFiles: false,
 
         init() {
-            const filesMethodId = {{ $filesMethodId ?? 'null' }};
-            if (filesMethodId) {
-                this.requiresFiles = this.formData.delivery_methods.includes(filesMethodId);
-            }
-        },
+    const filesMethodId = {{ $filesMethodId ?? 'null' }};
+    if (filesMethodId) {
+        this.requiresFiles = this.formData.delivery_methods.includes(filesMethodId);
+        if (this.requiresFiles && this.formData.attachments.length === 0) {
+            this.addAttachment();
+        }
+    }
+},
 
         addFeature() {
             this.formData.features.push({
@@ -438,25 +438,17 @@ function productForm() {
             }
         },
 
-        toggleDeliveryMethod(methodId, methodType) {
-            const index = this.formData.delivery_methods.indexOf(methodId);
-            if (index === -1) {
-                this.formData.delivery_methods.push(methodId);
-            } else {
-                this.formData.delivery_methods.splice(index, 1);
-            }
-            
+         selectDeliveryMethod(methodId) {
+            this.formData.delivery_method = methodId;
             const filesMethodId = {{ $filesMethodId ?? 'null' }};
-            if (filesMethodId) {
-                this.requiresFiles = this.formData.delivery_methods.includes(filesMethodId);
-            }
-            
-            if (!this.requiresFiles) {
-                this.formData.attachments = [];
-            } else if (this.formData.attachments.length === 0) {
+            this.requiresFiles = (methodId == filesMethodId);
+            if (this.requiresFiles && this.formData.attachments.length === 0) {
                 this.addAttachment();
+            } else if (!this.requiresFiles) {
+                this.formData.attachments = [];
             }
-        },
+        }
+,
 
         submitForm() {
             if (!this.formData.name || !this.formData.price || this.formData.delivery_methods.length === 0) {

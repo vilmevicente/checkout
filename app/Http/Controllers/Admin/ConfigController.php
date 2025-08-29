@@ -39,16 +39,17 @@ class ConfigController extends Controller
         ]);
 
         // Processar as configurações que serão salvas no banco de dados
+        
         foreach ($validated as $key => $value) {
             if ($key === 'smtp_password' && empty($value)) {
                 // Não atualizar a senha se estiver vazia
                 continue;
             }
 
-            // Converter valores de checkbox
-            if (in_array($key, ['recaptcha_enabled', 'facebook_pixel_enabled'])) {
-                $value = ($value === 'on' || $value === '1') ? 1 : 0;
-            }
+               if (in_array($key, ['facebook_pixel_enabled', 'recaptcha_enabled'])) {
+        $value = $request->boolean($key);
+    }
+
             
             Configuration::setValue($key, $value);
         }

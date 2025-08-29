@@ -59,22 +59,25 @@
                         </div>
 
                   
+<!-- Facebook Pixel -->
+<div class="flex items-center mb-4">
+    <div class="relative inline-block w-10 mr-2 align-middle select-none">
+        <input type="hidden" name="facebook_pixel_enabled" value="0">
 
-                    <!-- Seção Facebook Pixel -->
-                    <div class="mb-8">
-                        <h4 class="text-md font-medium text-gray-900 mb-4 border-b pb-2">Facebook Pixel</h4>
-                        
-                        <div class="flex items-center mb-4">
-                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                <input type="checkbox" name="facebook_pixel_enabled" id="facebook_pixel_enabled" 
-                                       class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                                       {{ (old('facebook_pixel_enabled', $configs['facebook_pixel_enabled']->value ?? '0') == '1') ? 'checked' : '' }}>
-                                <label for="facebook_pixel_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                            </div>
-                            <label for="facebook_pixel_enabled" class="text-sm font-medium text-gray-700">
-                                Ativar Facebook Pixel
-                            </label>
-                        </div>
+        <input 
+            type="checkbox"
+            name="facebook_pixel_enabled"
+            id="facebook_pixel_enabled"
+            value="1"
+            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            {{ old('facebook_pixel_enabled', $configs['facebook_pixel_enabled']->value ?? 0) == 1 ? 'checked' : '' }}
+        >
+        <label for="facebook_pixel_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+    </div>
+    <label for="facebook_pixel_enabled" class="text-sm font-medium text-gray-700">
+        Ativar Facebook Pixel
+    </label>
+</div>
                         
                         <div id="facebook-pixel-fields">
                             <div>
@@ -102,20 +105,24 @@
                     </div>
 
                     <!-- Seção reCAPTCHA -->
-                    <div class="mb-8">
-                        <h4 class="text-md font-medium text-gray-900 mb-4 border-b pb-2">Google reCAPTCHA</h4>
-                        
-                        <div class="flex items-center mb-4">
-                            <div class="relative inline-block w-10 mr-2 align-middle select-none">
-                                <input type="checkbox" name="recaptcha_enabled" id="recaptcha_enabled" 
-                                       class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                                       {{ (old('recaptcha_enabled', $configs['recaptcha_enabled']->value ?? '0') == '1') ? 'checked' : '' }}>
-                                <label for="recaptcha_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                            </div>
-                            <label for="recaptcha_enabled" class="text-sm font-medium text-gray-700">
-                                Ativar reCAPTCHA
-                            </label>
-                        </div>
+       <!-- reCAPTCHA -->
+<div class="flex items-center mb-4">
+    <div class="relative inline-block w-10 mr-2 align-middle select-none">
+     <input type="hidden" name="recaptcha_enabled" value="0">    
+    <input 
+            type="checkbox"
+            name="recaptcha_enabled"
+            id="recaptcha_enabled"
+            value="1"
+            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            {{ old('recaptcha_enabled', $configs['recaptcha_enabled']->value ?? 0) == 1 ? 'checked' : '' }}
+        >
+        <label for="recaptcha_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+    </div>
+    <label for="recaptcha_enabled" class="text-sm font-medium text-gray-700">
+        Ativar reCAPTCHA
+    </label>
+</div>
                         
                         <div id="recaptcha-fields">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
