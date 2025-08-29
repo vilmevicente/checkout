@@ -65,7 +65,7 @@
 
                    <div class="flex items-center justify-end space-x-2">
     <!-- Visualizar Checkout -->
-    <a href="{{ route('checkout', $product->slug) }}" 
+    <a href="{{ route('checkout', $product->slug) }}"  target="_blank"
        class="action-btn bg-green-100 text-green-700 hover:bg-green-200"
        title="Visualizar Checkout">
         <i class="fas fa-eye"></i>
