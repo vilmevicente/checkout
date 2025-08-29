@@ -50,30 +50,24 @@
                         <input id="remember_me" type="checkbox" 
                             class="rounded border-gray-300 dark:border-gray-600 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:bg-gray-800" 
                             name="remember">
-                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Manter-me conectado') }}</span>
                     </label>
 
                     @if (Route::has('password.request'))
                         <a class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline" 
                             href="{{ route('password.request') }}">
-                            {{ __('Forgot password?') }}
+                            {{ __('Esqueceu a senha?') }}
                         </a>
                     @endif
                 </div>
 
                 <!-- Button -->
                 <x-primary-button class="w-full justify-center py-3 text-lg rounded-xl">
-                    {{ __('Sign In') }}
+                    {{ __('Acessar') }}
                 </x-primary-button>
             </form>
 
-            <!-- Divider -->
-            <div class="flex items-center my-6">
-                <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-                <span class="mx-2 text-sm text-gray-500 dark:text-gray-400">or</span>
-                <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-            </div>
-
+            
             
         </div>
     </div>
