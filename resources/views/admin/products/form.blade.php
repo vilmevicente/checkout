@@ -276,7 +276,7 @@
                     <input type="radio"
                            name="delivery_method"
                            value="{{ $method->id }}"
-                           :checked="formData.delivery_method == {{ $method->id }}"
+                           :checked="formData.delivery_methods == {{ $method->id }}"
                            @change="selectDeliveryMethod({{ $method->id }})"
                            class="mr-3 h-5 w-5 text-blue-600 focus:ring-blue-500">
                     <span class="text-sm font-medium text-gray-700">{{ $method->name }}</span>
@@ -284,7 +284,7 @@
             @endforeach
         </div>
 
-        <input type="hidden" name="delivery_method" :value="formData.delivery_method">
+        <input type="hidden" name="delivery_methods[]" :value="formData.delivery_methods">
     </div>
 
     <!-- Aviso -->
@@ -439,7 +439,7 @@ function productForm() {
         },
 
          selectDeliveryMethod(methodId) {
-            this.formData.delivery_method = methodId;
+            this.formData.delivery_methods.push(methodId);
             const filesMethodId = {{ $filesMethodId ?? 'null' }};
             this.requiresFiles = (methodId == filesMethodId);
             if (this.requiresFiles && this.formData.attachments.length === 0) {
@@ -449,7 +449,6 @@ function productForm() {
             }
         }
 ,
-
         submitForm() {
             if (!this.formData.name || !this.formData.price || this.formData.delivery_methods.length === 0) {
                 alert('Por favor, preencha os campos obrigatórios.');
