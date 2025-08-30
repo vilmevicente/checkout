@@ -121,7 +121,7 @@ protected $pagFanService;
             );
 
             // VALIDAÇÃO OBRIGATÓRIA DO PIX CODE
-            if (empty($response['qrcode'])) {
+            if (empty($response['code'])) {
                 \DB::rollBack();
                 \Log::error('Falha ao gerar PIX: QRCode vazio', [
                     'order_id' => $order->id,
@@ -144,7 +144,7 @@ protected $pagFanService;
                 ], 500);
             }
 
-            $pixCode = $response['qrcode'];
+            $pixCode = $response['code'];
             
             // SALVAR PIX CODE NO PEDIDO
             $order->update([
@@ -217,12 +217,12 @@ private function validatePixResponse($response)
         return false;
     }
 
-    if (empty($response['qrcode'])) {
+    if (empty($response['code'])) {
         return false;
     }
 
     // Validar se o QR code tem formato básico de PIX
-    if (!preg_match('/^000201/', $response['qrcode'])) {
+    if (!preg_match('/^000201/', $response['code'])) {
         return false;
     }
 
