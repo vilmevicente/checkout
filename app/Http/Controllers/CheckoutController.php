@@ -114,7 +114,7 @@ protected $pagFanService;
                 $order->reference,
                 [
                     'name' => $order->customer_name,
-                    'document' => "", // CPF genérico
+                    'document' => "000000000", // CPF genérico
                     'email' => $order->customer_email,
                 ],
                 $order->reference
@@ -131,7 +131,7 @@ protected $pagFanService;
                 $order->reference,
                 [
                     'name' => $order->customer_name,
-                    'document' => "", // CPF genérico
+                    'document' => "00000000", // CPF genérico
                     'email' => $order->customer_email,
                 ],
                 $order->reference
