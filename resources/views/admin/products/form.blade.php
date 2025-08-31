@@ -47,6 +47,16 @@
                 </div>
             </div>
 
+
+             <!-- NOVO CAMPO: Success Redirect Link -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Link de Redirecionamento após Sucesso</label>
+        <input type="url" name="success_redirect_link" x-model="formData.success_redirect_link"
+               placeholder="https://exemplo.com/obrigado"
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" required>
+        <p class="text-xs text-gray-500 mt-1">URL para redirecionar o cliente após compra bem-sucedida</p>
+    </div>
+
             <div>
     <label class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
     <input type="text" name="slug"
@@ -279,7 +289,7 @@
                            :checked="formData.delivery_methods == {{ $method->id }}"
                            @change="selectDeliveryMethod({{ $method->id }})"
                            class="mr-3 h-5 w-5 text-blue-600 focus:ring-blue-500">
-                    <span class="text-sm font-medium text-gray-700">{{ $method->name }}</span>
+                      <span class="text-sm font-medium text-gray-700">{{ $method->name }}</span>
                 </label>
             @endforeach
         </div>
@@ -362,6 +372,7 @@ function productForm() {
             name: '{{ old('name', isset($product) ? $product->name : '') }}',
             price: '{{ old('price', isset($product) ? $product->price : '') }}',
             original_price: '{{ old('original_price', isset($product) ? $product->original_price : '') }}',
+            success_redirect_link: '{{ old('success_redirect_link', isset($product) ? $product->success_redirect_link : '') }}', // NOVO CAMPO
             description: `{!! old('description', isset($product) ? addslashes($product->description) : '') !!}`,
             delivery_content: `{!! old('delivery_content', isset($product) ? addslashes($product->delivery_content) : '') !!}`,
             is_active: {{  boolval(old('is_active', isset($product) ? $product->is_active : true)) ? 'true' : 'false' }},

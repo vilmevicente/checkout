@@ -43,12 +43,13 @@ public function store(Request $request)
         'main_banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'secondary_banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'delivery_content' => 'nullable|string',
+        'success_redirect_link' => 'nullable|url|max:500', // NOVO CAMPO AQUI
         'upsells' => 'nullable|array',
         'upsells.*.product_id' => 'exists:products,id',
         'upsells.*.discount_price' => 'nullable|numeric|min:0',
         'delivery_methods' => 'required|array|min:1',
         'delivery_methods.*' => 'exists:delivery_methods,id',
-         'features' => 'nullable|array',
+        'features' => 'nullable|array',
         'features.*.icon' => 'required|string',
         'features.*.name' => 'required|string|max:255',
         'features.*.description' => 'required|string|max:500',
@@ -206,7 +207,7 @@ public function edit(Product $product)
 public function update(Request $request, Product $product)
 {
     // Primeiro, validar os campos básicos
-    $validated = $request->validate([
+   $validated = $request->validate([
         'name' => 'required|string|max:255',
         'slug' => 'nullable|string|max:255|unique:products,slug,' . $product->id,
         'price' => 'required|numeric|min:0',
@@ -215,12 +216,13 @@ public function update(Request $request, Product $product)
         'main_banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'secondary_banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'delivery_content' => 'nullable|string',
+        'success_redirect_link' => 'url|max:500', // NOVO CAMPO AQUI
         'upsells' => 'nullable|array',
         'upsells.*.product_id' => 'exists:products,id',
         'upsells.*.discount_price' => 'nullable|numeric|min:0',
         'delivery_methods' => 'required|array|min:1',
         'delivery_methods.*' => 'exists:delivery_methods,id',
-         'features' => 'nullable|array',
+        'features' => 'nullable|array',
         'features.*.icon' => 'required|string',
         'features.*.name' => 'required|string|max:255',
         'features.*.description' => 'required|string|max:500',

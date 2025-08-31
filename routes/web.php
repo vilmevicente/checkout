@@ -45,5 +45,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
 // Frontend Routes (for checkout page)
 Route::get('/checkout/{slug}', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+Route::get('/checkout/success/{reference}', [CheckoutController::class, 'success'])->name('checkout.success');
 
 require __DIR__.'/auth.php';

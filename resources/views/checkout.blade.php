@@ -1102,14 +1102,24 @@ fbq('track', 'PageView');
 
             <!-- Botões -->
             <div class="flex flex-col gap-2">
-                <button 
-                    id="confirm-payment" 
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
-                    @click="confirmPayment"
-                >
-                    <i class="fas fa-check"></i>
-                    Já Paguei
-                </button>
+               <button 
+    id="confirm-payment" 
+    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+    @click="confirmPayment"
+    :disabled="isProcessing"
+>
+    <template x-if="!isProcessing">
+        <span>
+            <i class="fas fa-check"></i>
+            Já Paguei
+        </span>
+    </template>
+    <template x-if="isProcessing">
+        <span>
+            <div class="loading mr-2"></div> Processando...
+        </span>
+    </template>
+</button>
                 <button 
                     id="close-pix" 
                     class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
@@ -1199,6 +1209,7 @@ fbq('track', 'PageView');
                 showPixModal: false,
                 pixCode: '',
                 features: @json($mainProduct['features']),
+                paymentSuccess:'',
                 
                 init() {
                     // Inicializar com valores do old() se existirem
@@ -1460,6 +1471,8 @@ fbq('track', 'PageView');
                             const canvas = document.createElement('canvas');
                             qrElement.appendChild(canvas);
                             
+                            this.paymentSuccess = data.order.reference
+
                             QRCode.toCanvas(canvas, this.pixCode, { width: 200 }, function(error) {
                                 if (error) {
                                     console.error(error);
@@ -1515,10 +1528,41 @@ fbq('track', 'PageView');
                         button.style.background = '';
                     }, 2000);
                 },
-                
-                confirmPayment() {
-                    document.getElementById('checkout-form').submit();
-                },
+               async confirmPayment() {
+                const reference = this.paymentSuccess
+
+                if (!reference) {
+                    return;
+                }
+    try {
+        
+        this.isProcessing = true
+        const response = await fetch(`/checkout/success/${reference}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+             this.isProcessing = false
+            showNotification('success', 'Pagamento confirmado com sucesso! ✔️');
+            if (data.success_redirect_link) {
+                setTimeout(() => {
+                    window.location.href = data.success_redirect_link;
+                }, 1500);
+            }
+        } else {
+            this.isProcessing = false
+            showNotification('error', data.message || 'O pagamento ainda está pendente');
+        }
+    } catch (error) {
+        showNotification('error', 'Ocorreu um erro ao confirmar o pagamento. Tente novamente.');
+        console.error(error);
+    }
+},
                 
                 resetForm() {
                     this.customer = {

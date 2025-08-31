@@ -311,11 +311,22 @@ private function validatePixResponse($response)
     /**
      * Página de sucesso
      */
-    public function success($reference)
-    {
-        $order = Order::where('reference', $reference)->firstOrFail();
-        
-        return view('checkout.success', compact('order'));
+public function success($reference)
+{
+    $order = Order::where('reference', $reference)->firstOrFail();
+
+    if ($order->status === 'success') {
+        return response()->json([
+            'success' => true,
+            'message' => 'Pagamento confirmado com sucesso.',
+            'success_redirect_link' => $order->success_redirect_link, 
+        ]);
     }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'O pagamento ainda está pendente, por favor realize o pagamento',
+    ]);
+}
 
 }

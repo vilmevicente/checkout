@@ -20,7 +20,8 @@ class Product extends Model
         'main_banner',
         'secondary_banner',
         'delivery_content',
-        'is_active'
+        'is_active',
+        'success_redirect_link'
     ];
 
     protected $casts = [
