@@ -1210,6 +1210,7 @@ fbq('track', 'PageView');
                 pixCode: '',
                 features: @json($mainProduct['features']),
                 paymentSuccess:'',
+                success_redirect_link: '{{$mainProduct['success_redirect_link']}}',
                 
                 init() {
                     // Inicializar com valores do old() se existirem
@@ -1549,9 +1550,9 @@ fbq('track', 'PageView');
         if (data.success) {
              this.isProcessing = false
             showNotification('success', 'Pagamento confirmado com sucesso! ✔️');
-            if (data.success_redirect_link) {
+            if (this.success_redirect_link) {
                 setTimeout(() => {
-                    window.location.href = data.success_redirect_link;
+                    window.location.href = this.success_redirect_link;
                 }, 1500);
             }
         } else {

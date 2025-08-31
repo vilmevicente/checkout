@@ -319,7 +319,7 @@ public function success($reference)
         return response()->json([
             'success' => true,
             'message' => 'Pagamento confirmado com sucesso.',
-            'success_redirect_link' => $order->success_redirect_link, 
+           
         ]);
     }
 
