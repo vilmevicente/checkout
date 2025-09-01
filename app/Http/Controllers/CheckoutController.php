@@ -315,7 +315,7 @@ public function success($reference)
 {
     $order = Order::where('reference', $reference)->firstOrFail();
 
-    if ($order->status === 'success') {
+    if ($order->status === 'PAID') {
         return response()->json([
             'success' => true,
             'message' => 'Pagamento confirmado com sucesso.',

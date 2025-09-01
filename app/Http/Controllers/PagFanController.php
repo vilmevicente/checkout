@@ -126,31 +126,35 @@ class PagFanController extends Controller
     /**
      * Processa uma transação recebida via webhook
      */
-   private function processTransaction($transaction)
+private function processTransaction($transaction)
 {
     \Log::info('Processando transação PagFan:', $transaction);
 
-    $order = Order::with(['products.attachments', 'upsells.attachments'])
-        ->where('reference', $transaction['external_id'])
-        ->first();
+    // Buscar apenas o pedido (sem with, pois mainProduct() e upsells() cuidam disso)
+    $order = Order::where('reference', $transaction['external_id'])->first();
 
-    if ($order && $transaction['status'] === 'RECEIVEPIX') {
+    if (!$order) {
+        \Log::error('Pedido não encontrado: ' . $transaction['external_id']);
+        return;
+    }
+
+    if ($transaction['status'] === 'PAID') {
         // Marcar pedido como pago
-        $order->update([
-            'status' => 'paid',
-            'paid_at' => now(),
-            'transaction_id' => $transaction['transactionId']
-        ]);
+        $order->markAsPaid($transaction['status'], $transaction['dateApproval'], $transaction);
 
         try {
-            // Enviar e-mail para cada produto principal
-            foreach ($order->products as $product) {
-                $this->sendProductEmail($order, $product);
+            // Produto principal
+            $mainProductItem = $order->mainProduct();
+            if ($mainProductItem && $mainProductItem->product) {
+                $this->sendProductEmail($order, $mainProductItem->product);
             }
 
-            // Enviar e-mail para cada upsell
-            foreach ($order->upsells as $upsell) {
-                $this->sendProductEmail($order, $upsell);
+            // Upsells
+            $upsellItems = $order->upsells();
+            foreach ($upsellItems as $upsellItem) {
+                if ($upsellItem->product) {
+                    $this->sendProductEmail($order, $upsellItem->product);
+                }
             }
 
             \Log::info('E-mails enviados com sucesso para o pedido: ' . $order->reference);
@@ -161,39 +165,72 @@ class PagFanController extends Controller
     }
 }
 
+
 private function sendProductEmail($order, $product)
 {
     try {
         $smtpConfig = ConfigHelper::getSmtpConfig();
 
-        \Mail::send('admin.emails.product-delivery', [
-            'order' => $order,
-            'product' => $product,
-            'deliveryContent' => $product->delivery_content, // incluir instruções de entrega
-            'customerName' => $order->customer_name
-        ], function ($message) use ($order, $product, $smtpConfig) {
-            $message->to($order->customer_email)
-                ->subject('Acesso ao ' . $product->name . ' - Pedido #' . $order->reference);
+\Mail::send('admin.emails.product-delivery', [
+    'order' => $order,
+    'product' => $product,
+    'deliveryContent' => $product->delivery_content, // incluir instruções de entrega
+    'customerName' => $order->customer_name
+], function ($message) use ($order, $product, $smtpConfig) {
+    $message->to($order->customer_email)
+        ->subject('Acesso ao ' . $product->name . ' - Pedido #' . $order->reference);
 
-            if (!empty($smtpConfig['from']['address'])) {
-                $message->from(
-                    $smtpConfig['from']['address'],
-                    $smtpConfig['from']['name'] ?? config('app.name')
-                );
-            }
+    if (!empty($smtpConfig['from']['address'])) {
+        $message->from(
+            $smtpConfig['from']['address'],
+            $smtpConfig['from']['name'] ?? config('app.name')
+        );
+    }
 
-            // Anexar ficheiros do produto
-            if ($product->attachments && $product->attachments->count() > 0) {
-                foreach ($product->attachments as $attachment) {
-                    if ($attachment->file_path && Storage::exists($attachment->file_path)) {
-                        $message->attach(
-                            Storage::path($attachment->file_path),
-                            ['as' => $attachment->name ?? $product->name . '.pdf']
-                        );
-                    }
+// Anexar ficheiros do produto
+if ($product->attachments && $product->attachments->count() > 0) {
+    foreach ($product->attachments as $attachment) {
+
+        $relativePath = ltrim($attachment->file_path, '/'); // ex.: product-attachments/arquivo.ext
+
+        // 1) Caminho padrão via symlink: public/storage/<relativePath>
+        $absolutePath = public_path('storage/' . $relativePath);
+
+        // 2) Fallback: caso esteja direto em public/<relativePath>
+        if (!file_exists($absolutePath)) {
+            $absolutePath = public_path($relativePath);
+        }
+
+        // 3) Último fallback: disco 'public'
+        if (!file_exists($absolutePath) && \Storage::disk('public')->exists($relativePath)) {
+            $absolutePath = \Storage::disk('public')->path($relativePath);
+        }
+
+        \Log::info('Caminho para anexar: ' . $absolutePath);
+
+        if (file_exists($absolutePath)) {
+            try {
+                $downloadName = $attachment->name ?: ($product->name . '_anexo');
+                $ext = pathinfo($absolutePath, PATHINFO_EXTENSION);
+
+                if ($ext && !str_contains($downloadName, '.')) {
+                    $downloadName .= '.' . $ext;
                 }
+
+                $message->attach($absolutePath, ['as' => $downloadName]);
+                \Log::info('Anexo adicionado: ' . $downloadName);
+
+            } catch (\Exception $e) {
+                \Log::warning('Erro ao anexar arquivo ' . $absolutePath . ': ' . $e->getMessage());
+                continue;
             }
-        });
+        } else {
+            \Log::warning('Arquivo não encontrado para anexar: ' . $absolutePath);
+        }
+    }
+}
+
+});
 
         \Log::info('E-mail enviado para produto: ' . $product->name);
 
@@ -201,6 +238,36 @@ private function sendProductEmail($order, $product)
         \Log::error('Erro ao enviar e-mail para ' . $product->name . ': ' . $e->getMessage());
         throw $e; // Re-throw para tratamento superior
     }
+}
+
+private function getExtensionFromMime($mime)
+{
+    $mimeMap = [
+        'application/pdf' => 'pdf',
+        'application/zip' => 'zip',
+        'application/vnd.rar' => 'rar',
+        'application/x-rar-compressed' => 'rar',
+        'application/x-zip-compressed' => 'zip',
+        'application/msword' => 'doc',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+        'application/vnd.ms-excel' => 'xls',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+        'application/vnd.ms-powerpoint' => 'ppt',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif',
+        'image/svg+xml' => 'svg',
+        'text/plain' => 'txt',
+        'text/csv' => 'csv',
+        'audio/mpeg' => 'mp3',
+        'audio/wav' => 'wav',
+        'video/mp4' => 'mp4',
+        'video/quicktime' => 'mov',
+        'application/octet-stream' => 'bin',
+    ];
+    
+    return $mimeMap[$mime] ?? null;
 }
 
 

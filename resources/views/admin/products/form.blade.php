@@ -450,7 +450,7 @@ function productForm() {
         },
 
          selectDeliveryMethod(methodId) {
-            this.formData.delivery_methods.push(methodId);
+            this.formData.delivery_methods = [methodId];
             const filesMethodId = {{ $filesMethodId ?? 'null' }};
             this.requiresFiles = (methodId == filesMethodId);
             if (this.requiresFiles && this.formData.attachments.length === 0) {

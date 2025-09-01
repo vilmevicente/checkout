@@ -103,4 +103,8 @@ public function testimonials()
     {
         return 'slug';
     }
+
+
 }
+
+

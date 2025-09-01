@@ -8,22 +8,21 @@
     <h1>Olá, {{ $customerName }}!</h1>
     <p>Obrigado por adquirir o produto: <strong>{{ $product->name }}</strong></p>
     
-    @if($content)
+    @if($deliveryContent)
     <div>
-        {!! $content !!}
+        {!! $deliveryContent !!}
     </div>
     @endif
     
-    @if($attachments->count() > 0)
+    @if($product->attachments && $product->attachments->count() > 0)
     <h3>Anexos incluídos:</h3>
     <ul>
-        @foreach($attachments as $attachment)
+        @foreach($product->attachments as $attachment)
         <li>
             <strong>{{ $attachment->name }}</strong> 
             @if($attachment->file_size)
             ({{ $attachment->formatted_size }})
             @endif
-            - <a href="{{ $attachment->file_url }}">Download</a>
         </li>
         @endforeach
     </ul>

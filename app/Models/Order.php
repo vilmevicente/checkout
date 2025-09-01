@@ -40,12 +40,12 @@ class Order extends Model
      * Itens do pedido
      */
 
-      public function markAsPaid($transactionId = null)
+      public function markAsPaid($status , $dateApproval,$transaction)
     {
         $this->update([
-            'status' => 'paid',
-            'paid_at' => now(),
-            'transaction_id' => $transactionId,
+            'status' => $status,
+            'updated_at' => $dateApproval,
+            'notes' => json_encode($transaction),
         ]);
     }
 
