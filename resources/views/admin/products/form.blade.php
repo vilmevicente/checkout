@@ -214,18 +214,42 @@
             </button>
         </div>
 
-        <!-- Conteúdo de Entrega -->
-        <div class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                <i class="fas fa-envelope mr-2"></i> Conteúdo de Entrega
-            </h2>
-            
-            <label class="block text-sm font-medium text-gray-700 mb-2">Conteúdo para Email</label>
-            <textarea name="delivery_content" x-model="formData.delivery_content" rows="5"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
-        </div>
 
-        <!-- Upsells (Opcional) -->
+
+
+<!-- Conteúdo de Entrega -->
+<div class="mb-8" x-data>
+    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+        <i class="fas fa-envelope mr-2"></i> Conteúdo de Entrega
+    </h2>
+    
+    <label class="block text-sm font-medium text-gray-700 mb-2">Conteúdo para Email</label>
+    <textarea 
+        id="delivery_content"
+        class="delivery_content w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        x-ref="deliveryEditor"
+        x-init="
+            ClassicEditor.create($refs.deliveryEditor, {
+                toolbar: [
+                    'undo','redo','|',
+                    'heading','|',
+                    'bold','italic','underline','link','|',
+                ]
+            })
+            .then(editor => {
+                // Inicializa o conteúdo no editor a partir do formData
+                editor.setData(formData.delivery_content || '');
+
+                // Sempre que o editor mudar, atualiza o Alpine
+                editor.model.document.on('change:data', () => {
+                    formData.delivery_content = editor.getData();
+                });
+            })
+            .catch(error => console.error(error));
+        "
+    >{!! old('delivery_content', isset($product) ? $product->delivery_content : '') !!}</textarea>
+</div>
+   <!-- Upsells (Opcional) -->
         <div class="mb-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
                 <i class="fas fa-tags mr-2"></i> Upsells (Opcional)
@@ -364,6 +388,12 @@
         </div>
     </form>
 </div>
+
+
+
+<!-- CKEditor 5 -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
 
 <script>
 function productForm() {

@@ -78,71 +78,64 @@
         Ativar Facebook Pixel
     </label>
 </div>
-                        
-                        <div id="facebook-pixel-fields">
-                            <div>
-                                <label for="facebook_pixel_id" class="block text-sm font-medium text-gray-700">
-                                    Pixel ID
-                                </label>
-                                <input type="text" name="facebook_pixel_id" id="facebook_pixel_id"
-                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                       value="{{ old('facebook_pixel_id', $configs['facebook_pixel_id']->value ?? '') }}"
-                                       placeholder="Ex: 123456789012345">
-                                <p class="mt-1 text-sm text-gray-500">ID do seu Facebook Pixel.</p>
-                            </div>
 
-                            <div class="mt-4">
-                                <label for="facebook_access_token" class="block text-sm font-medium text-gray-700">
-                                    Access Token (Opcional)
-                                </label>
-                                <input type="password" name="facebook_access_token" id="facebook_access_token"
-                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                       value="{{ old('facebook_access_token', $configs['facebook_access_token']->value ?? '') }}"
-                                       placeholder="Token de acesso do Facebook">
-                                <p class="mt-1 text-sm text-gray-500">Necessário para eventos personalizados.</p>
-                            </div>
-                        </div>
-                    </div>
+<div id="facebook-pixel-fields">
+    <div>
+        <label for="facebook_pixel_id" class="block text-sm font-medium text-gray-700">
+            Pixel ID
+        </label>
+        <input type="text" name="facebook_pixel_id" id="facebook_pixel_id"
+               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
+               value="{{ old('facebook_pixel_id', $configs['facebook_pixel_id']->value ?? '') }}"
+               placeholder="Ex: 123456789012345">
+        <p class="mt-1 text-sm text-gray-500">ID do seu Facebook Pixel.</p>
+    </div>
 
+    <div class="mt-4">
+        <label for="facebook_access_token" class="block text-sm font-medium text-gray-700">
+            Access Token (Opcional)
+        </label>
+        <input type="password" name="facebook_access_token" id="facebook_access_token"
+               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
+               value="{{ old('facebook_access_token', $configs['facebook_access_token']->value ?? '') }}"
+               placeholder="Token de acesso do Facebook">
+        <p class="mt-1 text-sm text-gray-500">Necessário para eventos personalizados.</p>
+    </div>
+</div>
 
 
-
-                  
 <!-- Google Pixel -->
 <div class="flex items-center mb-4">
     <div class="relative inline-block w-10 mr-2 align-middle select-none">
-        <input type="hidden" name="facebook_pixel_enabled" value="0">
+        <input type="hidden" name="google_pixel_enabled" value="0">
 
         <input 
             type="checkbox"
-            name="facebook_pixel_enabled"
-            id="facebook_pixel_enabled"
+            name="google_pixel_enabled"
+            id="google_pixel_enabled"
             value="1"
             class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
             {{ old('google_pixel_enabled', $configs['google_pixel_enabled']->value ?? 0) == 1 ? 'checked' : '' }}
         >
-        <label for="facebook_pixel_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+        <label for="google_pixel_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
     </div>
     <label for="google_pixel_enabled" class="text-sm font-medium text-gray-700">
         Ativar Google Pixel
     </label>
 </div>
-                        
-                        <div id="facebook-pixel-fields">
-                            <div>
-                                <label for="google_pixel_id" class="block text-sm font-medium text-gray-700">
-                                    Google Tag Manager ID
-                                </label>
-                                <input type="text" name="facebook_pixel_id" id="facebook_pixel_id"
-                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                       value="{{ old('google_pixel_id', $configs['google_pixel_id']->value ?? '') }}"
-                                       placeholder="Ex: 123456789012345">
-                                <p class="mt-1 text-sm text-gray-500">ID do seu Google Pixel.</p>
-                            </div>
 
-                        </div>
-                    </div>
-
+<div id="google-pixel-fields">
+    <div>
+        <label for="google_pixel_id" class="block text-sm font-medium text-gray-700">
+            Google Tag Manager ID
+        </label>
+        <input type="text" name="google_pixel_id" id="google_pixel_id"
+               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
+               value="{{ old('google_pixel_id', $configs['google_pixel_id']->value ?? '') }}"
+               placeholder="Ex: GTM-XXXXXX">
+        <p class="mt-1 text-sm text-gray-500">ID do seu Google Pixel ou GTM.</p>
+    </div>
+</div>
 
 
                     <!-- Seção reCAPTCHA -->
