@@ -104,6 +104,47 @@
                         </div>
                     </div>
 
+
+
+
+                  
+<!-- Google Pixel -->
+<div class="flex items-center mb-4">
+    <div class="relative inline-block w-10 mr-2 align-middle select-none">
+        <input type="hidden" name="facebook_pixel_enabled" value="0">
+
+        <input 
+            type="checkbox"
+            name="facebook_pixel_enabled"
+            id="facebook_pixel_enabled"
+            value="1"
+            class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+            {{ old('google_pixel_enabled', $configs['google_pixel_enabled']->value ?? 0) == 1 ? 'checked' : '' }}
+        >
+        <label for="facebook_pixel_enabled" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+    </div>
+    <label for="google_pixel_enabled" class="text-sm font-medium text-gray-700">
+        Ativar Google Pixel
+    </label>
+</div>
+                        
+                        <div id="facebook-pixel-fields">
+                            <div>
+                                <label for="google_pixel_id" class="block text-sm font-medium text-gray-700">
+                                    Google Tag Manager ID
+                                </label>
+                                <input type="text" name="facebook_pixel_id" id="facebook_pixel_id"
+                                       class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                       value="{{ old('google_pixel_id', $configs['google_pixel_id']->value ?? '') }}"
+                                       placeholder="Ex: 123456789012345">
+                                <p class="mt-1 text-sm text-gray-500">ID do seu Google Pixel.</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
                     <!-- Seção reCAPTCHA -->
        <!-- reCAPTCHA -->
 <div class="flex items-center mb-4">
@@ -153,6 +194,54 @@
                             </p>
                         </div>
                     </div>
+
+
+
+
+ <!-- Seção Modelos de E-mail -->
+                    <div class="mb-8 border-t border-gray-200 pt-6">
+                        <h4 class="text-md font-medium text-gray-900 mb-4">Modelos de E-mail</h4>
+
+                        <!-- Confirmação de Pedido -->
+                        <div class="mb-6">
+                            <label for="order_confirmation_template" class="block text-sm font-medium text-gray-700">
+                                Modelo de Confirmação de Pedido
+                            </label>
+                            <textarea 
+                                name="order_confirmation_template" 
+                                id="order_confirmation_template" 
+                                rows="8"
+                                class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
+                            >{!! old('order_confirmation_template', $configs['order_confirmation_template']->value ?? '') !!}</textarea>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Variáveis disponíveis: <code>{{ '{' }}{ $order->customer_name }}</code>, 
+                                <code>{{ '{' }}{ $order->reference }}</code>, 
+                                <code>{{ '{' }}{ $order->total }}</code>.
+                            </p>
+                        </div>
+
+                        <!-- Envio de Conteúdo -->
+                        <div>
+                            <label for="content_delivery_template" class="block text-sm font-medium text-gray-700">
+                                Modelo de Envio de Conteúdo
+                            </label>
+                            <textarea 
+                                name="content_delivery_template" 
+                                id="content_delivery_template" 
+                                rows="8"
+                                class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
+                            >{!! old('content_delivery_template', $configs['content_delivery_template']->value ?? '') !!}</textarea>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Variáveis disponíveis: <code>{{ '{' }}{ $user->name }}</code>, 
+                                <code>{{ '{' }}{ $content->title }}</code>, 
+                                <code>{{ '{' }}{ $content->link }}</code>.
+                            </p>
+                        </div>
+                    </div>
+
+
+
+
 
                     <!-- Configurações SMTP -->
                     <div class="mb-8 border-t border-gray-200 pt-6">
@@ -265,6 +354,30 @@
         </div>
     </div>
 
+
+
+<!-- CKEditor 5 -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    document.querySelectorAll('.html-editor').forEach((el) => {
+        ClassicEditor
+            .create(el, {
+                toolbar: [
+                    'undo','redo','|',
+                    'heading','|',
+                    'bold','italic','underline',,'|',
+                    
+                    
+                ],
+                
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+
+
     <script>
         // Toggle para mostrar/ocultar campos do Facebook Pixel
         const facebookPixelToggle = document.getElementById('facebook_pixel_enabled');
@@ -273,6 +386,11 @@
         // Toggle para mostrar/ocultar campos do reCAPTCHA
         const recaptchaToggle = document.getElementById('recaptcha_enabled');
         const recaptchaFields = document.getElementById('recaptcha-fields');
+
+
+        // Toggle para mostrar/ocultar campos do Google Pixel
+        const googleToggle = document.getElementById('google_pixel_enabled');
+        const googleFields = document.getElementById('google-pixel-fields');
         
         // Função para atualizar a visibilidade dos campos
         function updateFieldsVisibility() {
@@ -287,6 +405,12 @@
             } else {
                 recaptchaFields.style.display = 'none';
             }
+
+            if (googleToggle.checked) {
+                googleFields.style.display = 'block';
+            } else {
+                googleFields.style.display = 'none';
+            }
         }
         
         // Inicializar a visibilidade
@@ -295,6 +419,8 @@
         // Adicionar event listeners
         facebookPixelToggle.addEventListener('change', updateFieldsVisibility);
         recaptchaToggle.addEventListener('change', updateFieldsVisibility);
+
+        googleToggle.addEventListener('change', updateFieldsVisibility);
         
         // Teste de conexão SMTP
         document.getElementById('test-smtp').addEventListener('click', function() {

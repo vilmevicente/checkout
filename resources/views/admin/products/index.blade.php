@@ -8,7 +8,7 @@
         if (confirm(`Tem certeza que deseja excluir o produto '${name}'?`)) {
             document.getElementById('delete-form-' + id).submit();
         }
-    },
+    },  
     duplicateProduct(id, name) {
         if (confirm(`Tem certeza que deseja duplicar o produto '${name}'?`)) {
             document.getElementById('duplicate-form-' + id).submit();
@@ -80,6 +80,7 @@
         <span class="tooltip">Editar Produto</span>
     </a>
 
+
     <!-- Duplicar Produto -->
     <button @click="duplicateProduct({{ $product->id }}, '{{ addslashes($product->name) }}')" 
             class="action-btn bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
@@ -87,6 +88,16 @@
         <i class="fas fa-copy"></i>
         <span class="tooltip">Duplicar Produto</span>
     </button>
+
+    <form 
+    id="duplicate-form-{{ $product->id }}"
+    action="{{ route('admin.products.duplicate', $product) }}"
+    method="GET"
+    class="hidden" 
+
+        >
+        
+    </form>
     
     <!-- Excluir Produto -->
     <button @click="deleteProduct({{ $product->id }}, '{{ addslashes($product->name) }}')" 

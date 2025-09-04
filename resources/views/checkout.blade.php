@@ -327,248 +327,272 @@
             display: none !important;
         }
 
-         .benefit-card {
-            background: white;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            scroll-snap-align: start;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 150px;
-            width: 100%;
-            padding: 20px;
-            border-radius: 8px;
-        }
+     
+     .benefit-card {
+    background: white;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box; /* <<< ESSENCIAL */
+}
 
-        /* Ajustes específicos para mobile */
-        @media (max-width: 767px) {
-            .benefit-card {
-                height: 150px;
-                padding:  20px;
-                border-radius: 8px; 
-                width: calc(100vw - 6px); 
-                     }
-            
-            .icon-container {
-                width: 50px;
-                height: 50px;
-                margin-bottom: 12px;
-            }
-            
-            .benefit-icon {
-                font-size: 22px;
-            }
-            
-            .benefit-title {
-                font-size: 16px;
-                margin-bottom: 8px;
-            }
-            
-            .benefit-description {
-                font-size: 14px;
-                max-width: 90%;
-            }
-        }
+/* Ajustes específicos para mobile */
+@media (max-width: 767px) {
+    .benefit-card {
+        height: 150px;
+        padding: 20px;
+        border-radius: 8px;
+        flex: 0 0 100%;   /* <<< cada card ocupa 100% da tela */
+        max-width: 100%;  /* <<< impede overflow horizontal */
+    }
 
-        /* Estilos para desktop */
-        @media (min-width: 768px) {
-            .benefit-card {
+    .icon-container {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 12px;
+    }
 
-                padding: 24px;
-                border-radius: 12px;
-               
-            }
-            
-    
-            
-            .benefit-icon {
-                font-size: 24px;
-            }
-            
-            .benefit-title {
-                font-size: 18px;
-                margin-bottom: 12px;
-            }
-            
-            .benefit-description {
-                font-size: 15px;
-                max-width: 80%;
-            }
-        }
+    .benefit-icon {
+        font-size: 22px;
+    }
 
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
+    .benefit-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
 
-        .icon-container {
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            
-        }
+    .benefit-description {
+        font-size: 14px;
+        max-width: 90%;
+    }
+}
 
-        .benefit-icon {
-            color: #4f46e5;
-        }
+/* Desktop */
+@media (min-width: 768px) {
+    .benefit-card {
+        padding: 24px;
+        border-radius: 12px;
+    }
 
-        .benefit-title {
-            font-weight: 700;
-            color: #1f2937;
-        }
+    .benefit-icon {
+        font-size: 24px;
+    }
 
-        .benefit-description {
-            color: #6b7280;
-            line-height: 1.4;
-        }
+    .benefit-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
 
-        .slider-container {
-            position: relative;
-            overflow: hidden;
-             
-    
-        }
+    .benefit-description {
+        font-size: 15px;
+        max-width: 80%;
+    }
+}
 
-        .slider-track {
-            display: flex;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
 
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            gap: 8px;
-        }
+.icon-container {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .slider-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #d1d5db;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+.benefit-icon {
+    color: #4f46e5;
+}
 
-        .slider-dot.active {
-            background-color: #4f46e5;
-            transform: scale(1.3);
-        }
+.benefit-title {
+    font-weight: 700;
+    color: #1f2937;
+}
 
+.benefit-description {
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.slider-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.slider-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slider-dots {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 8px;
+}
+
+.slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #d1d5db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slider-dot.active {
+    background-color: #4f46e5;
+    transform: scale(1.3);
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.slider-nav:hover {
+    opacity: 1;
+}
+
+.slider-prev {
+    left: 15px;
+}
+
+.slider-next {
+    right: 15px;
+}
+
+/* Desktop - Grid */
+@media (min-width: 768px) {
+    .slider-container {
+        width: 100%;
+        margin-left: 0;
+        overflow: hidden;
+    }
+
+    .slider-track {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        transform: none !important;
+        width: 100%;
+    }
+
+    .benefit-card {
+        margin: 0;
+    }
+
+    .slider-dots {
+        display: none;
+    }
+
+    .slider-nav {
+        display: none;
+    }
+}
+
+/* Mobile - Slider */
+@media (max-width: 767px) {
+    .slider-container {
+        overflow-x: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        border-radius: 12px;
+    }
+
+    .slider-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .slider-track {
+        display: flex;
+        transition: transform 0.4s ease-in-out;
+        width: auto; 
+    }
+
+    .benefit-card {
+        flex: 0 0 100%; /* cada card ocupa 100% */
+        max-width: 100%;
+         box-sizing: border-box;
+    }
+
+    /* Mostrar setas apenas se não for touch device */
+    @media (hover: hover) {
         .slider-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: white;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-            z-index: 10;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
         }
+    }
+}
 
-        .slider-nav:hover {
-            opacity: 1;
-        }
+.benefit-card {
+  box-sizing: border-box; /* padding conta dentro da largura */
+}
 
-        .slider-prev {
-            left: 15px;
-        }
+.slider-track {
+  overflow: hidden; /* evita vazar conteúdo */
+}
 
-        .slider-next {
-            right: 15px;
-        }
+@media (max-width: 448px) {
+    .benefit-card {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 12px;
+        padding-right: 12px;
+        box-sizing: border-box; /* padding não soma na largura */
+    }
 
-        /* Desktop - Grid */
-        @media (min-width: 768px) {
-            .slider-container {
-                width: 100%;
-                margin-left: 0;
-                overflow: hidden;
-                  
-            }
-            
-            .slider-track {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-                transform: none !important;
-                width: 100%;
-            }
-            
-            .benefit-card {
-                margin: 0;
-            }
-            
-            .slider-dots {
-                display: none;
-            }
-            
-            .slider-nav {
-                display: none;
-            }
-        }
+    .slider-track {
+        width: auto !important;   /* evita overflow */
+    }
 
-        /* Mobile - Slider */
-        @media (max-width: 767px) {
-            .slider-container {
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                border-radius: 12px;
-            }
-            
-            .slider-container::-webkit-scrollbar {
-                display: none;
-            }
-            
-            .slider-track {
-                width: max-content;
-            }
-            
-            .slider-nav {
-                display: none;
-            }
-            
-            /* Mostrar setas apenas se não for touch device */
-            @media (hover: hover) {
-                .slider-nav {
-                    display: flex;
-                }
-            }
-        }
-
-        .header {
-            text-align: center;
-            padding: 30px 20px 20px;
-        }
-        
-        .content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Media query para dispositivos móveis */
-@media (max-width: 768px) {
-    .benefits-banner {
-        font-size: 0.8rem;
+    .slider-container {
+        overflow-x: hidden;
     }
 }
 
 
     </style>
 </head>
+
+
+
+{{-- reCAPTCHA --}}
+@if(App\Helpers\ConfigHelper::isGooglePixelEnabled())
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ App\Helpers\ConfigHelper::get("google_pixel_id") }}');</script>
+   
+@endif
+
+
 
 {{-- reCAPTCHA --}}
 @if(App\Helpers\ConfigHelper::isRecaptchaEnabled())
@@ -598,6 +622,16 @@ fbq('track', 'PageView');
 @endif
 
 <body>
+
+
+ @if(App\Helpers\ConfigHelper::isGooglePixelEnabled())
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ App\Helpers\ConfigHelper::get("google_pixel_id") }}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    @endif
+
+
     <!-- Notification System -->
     <div class="notification error" id="error-notification" style="display: none;">
         <i class="fas fa-exclamation-circle"></i>
@@ -634,102 +668,10 @@ fbq('track', 'PageView');
         <!-- Banner principal -->
         <img src="/storage/{{ $mainProduct['main_banner'] }}" alt="Banner Principal" class="w-full mb-8 rounded-lg shadow-card">
 
-        <!-- Benefits Section with Slider -->
-        <div class="benefits-banner">
-            <i class="fas fa-gift mr-2"></i> SEUS BENEFÍCIOS EXCLUSIVOS
-        </div>
-
-        <!-- Slider de Benefícios -->
+       
       
         
-        <div class="content">
-            <div 
-                x-data="{
-                   
-                    currentIndex: 0,
-                    
-                    init() {
-                        this.startAutoPlay();
-                    },
-                    
-                    next() {
-                        this.currentIndex = (this.currentIndex + 1) % this.features.length;
-                        this.restartAutoPlay();
-                    },
-                    
-                    prev() {
-                        this.currentIndex = (this.currentIndex - 1 + this.features.length) % this.features.length;
-                        this.restartAutoPlay();
-                    },
-                    
-                    goTo(index) {
-                        this.currentIndex = index;
-                        this.restartAutoPlay();
-                    },
-                    
-                    startAutoPlay() {
-                        this.intervalId = setInterval(() => {
-                            this.next();
-                        }, 4000);
-                    },
-                    
-                    restartAutoPlay() {
-                        clearInterval(this.intervalId);
-                        this.startAutoPlay();
-                    }
-                }" 
-                class="relative"
-            >
-                <!-- Mobile Slider -->
-                <div class="relative md:hidden">
-                    <div class="slider-container" x-ref="slider">
-                        <div class="slider-track" :style="'transform: translateX(-' + (currentIndex * 100) + 'vw)'">
-                            <template x-for="(feature, index) in features" :key="index">
-                                <div class="benefit-card">
-                                    <div class="icon-container">
-                                        <i :class="'benefit-icon fa ' + feature.icon"></i>
-                                    </div>
-                                    <h3 class="benefit-title" x-text="feature.name"></h3>
-                                    <p class="benefit-description" x-text="feature.description"></p>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                    
-                    <button class="slider-nav slider-prev" @click="prev()">
-                        <i class="fas fa-chevron-left text-indigo-600"></i>
-                    </button>
-                    
-                    <button class="slider-nav slider-next" @click="next()">
-                        <i class="fas fa-chevron-right text-indigo-600"></i>
-                    </button>
-                </div>
-                
-                <!-- Desktop Grid -->
-                <div class="hidden md:grid md:grid-cols-3 gap-8 mb-8">
-                    <template x-for="(feature, index) in features" :key="index">
-                        <div class="benefit-card">
-                            <div class="icon-container">
-                                <i :class="'benefit-icon fa ' + feature.icon"></i>
-                            </div>
-                            <h3 class="benefit-title" x-text="feature.name"></h3>
-                            <p class="benefit-description" x-text="feature.description"></p>
-                        </div>
-                    </template>
-                </div>
-                
-                <!-- Indicadores (Dots) -->
-                <div class="slider-dots">
-                    <template x-for="(_, index) in features" :key="index">
-                        <div 
-                            class="slider-dot" 
-                            :class="{ 'active': currentIndex === index }"
-                            @click="goTo(index)"
-                        ></div>
-                    </template>
-                </div>
-            </div>
-        </div>
+    
 
         <!-- FORMULÁRIO PRINCIPAL -->
         <form id="checkout-form" method="POST" action="{{ route('checkout.process') }}">
@@ -807,35 +749,7 @@ fbq('track', 'PageView');
                                 @enderror
                             </div>
 
-                            <div class="space-y-2">
-                                <label for="confirm-email" class="text-sm font-medium text-gray-700">
-                                    Confirmar E-mail *
-                                </label>
-                                <div class="relative">
-                                    <i class="absolute left-3 top-3 text-gray-400 fas fa-envelope"></i>
-                                    <input
-                                        id="confirm-email"
-                                        name="email_confirmation"
-                                        type="email"
-                                        placeholder="Confirme seu e-mail"
-                                        class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                        :class="{ 'input-error': errors.email_confirmation, 'input-success': fields.email_confirmation && !errors.email_confirmation }"
-                                        required
-                                        value="{{ old('email_confirmation') }}"
-                                        x-model="customer.email_confirmation"
-                                        @blur="validateField('email_confirmation')" />
-                                </div>
-                                <div class="error-message" x-show="errors.email_confirmation">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                    <span x-text="errors.email_confirmation"></span>
-                                </div>
-                                @error('email_confirmation')
-                                <div class="error-message">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                    <span>{{ $message }}</span>
-                                </div>
-                                @enderror
-                            </div>
+
 
                             <div class="space-y-2">
                                 <label for="phone" class="text-sm font-medium text-gray-700">
@@ -995,6 +909,62 @@ fbq('track', 'PageView');
                         </div>
                         @endforeach
                     </div>
+
+
+                    <!-- Benefits Section SIMPLES -->
+<div>
+     <div class="benefits-banner">
+            <i class="fas fa-gift mr-2"></i> SEUS BENEFÍCIOS EXCLUSIVOS
+        </div>
+
+        <!-- Slider de Benefícios -->
+      
+        
+        <div class="content">
+            
+              <div 
+  x-data="slider()" 
+  x-init="init()"
+  class="relative overflow-hidden"
+>
+    <!-- Track -->
+    <div 
+      class="slider-track transition-transform duration-500 ease-in-out"
+      :class="isMobile ? 'flex flex-nowrap' : 'grid grid-cols-3 gap-4'"
+      :style="isMobile ? 'transform: translateX(-' + (currentIndex * 100) + '%)' : ''"
+    >
+        <template x-for="(feature, index) in features" :key="index">
+            <div 
+              class="benefit-card bg-white p-6 rounded-2xl shadow-md text-center"
+              :class="isMobile ? 'flex-shrink-0 w-[100%] box-border' : ''"
+:style="isMobile ? 'width:' + slideWidth + 'px' : ''"
+
+            >
+                <div class="icon-container text-4xl text-indigo-600 mb-4">
+                    <i :class="'fa ' + feature.icon"></i>
+                </div>
+                <h3 class="benefit-title font-semibold text-lg mb-2" x-text="feature.name"></h3>
+                <p class="benefit-description text-gray-600" x-text="feature.description"></p>
+            </div>
+        </template>
+    </div>
+
+    <!-- Dots (só mobile) -->
+    <div class="flex justify-center mt-4" x-show="isMobile">
+        <template x-for="(feature, index) in features" :key="'dot'+index">
+            <button 
+                class="w-3 h-3 mx-1 rounded-full transition"
+                :class="currentIndex === index ? 'bg-indigo-600 scale-110' : 'bg-gray-400'"
+                @click="goTo(index)">
+            </button>
+        </template>
+    </div>
+</div>
+
+
+
+        </div>
+</div>
                 </div>
 
                 <!-- Right Column - Summary -->
@@ -1181,6 +1151,57 @@ fbq('track', 'PageView');
             }, 5000);
         }
 
+
+        function slider() {
+  return {
+    cards: [
+      { title: "Slide 1", text: "Conteúdo do slide 1" },
+      { title: "Slide 2", text: "Conteúdo do slide 2" },
+      { title: "Slide 3", text: "Conteúdo do slide 3" },
+    ],
+    currentIndex: 0,
+    isMobile: window.innerWidth < 768,
+    interval: null,
+
+    init() {
+      // Auto-slide apenas no mobile
+      if (this.isMobile) {
+        this.startAutoSlide();
+      }
+      // Atualiza se redimensionar
+      window.addEventListener('resize', () => {
+        this.isMobile = window.innerWidth < 768;
+        if (this.isMobile) {
+          this.startAutoSlide();
+        } else {
+          this.stopAutoSlide();
+          this.currentIndex = 0; // reset no desktop
+        }
+      });
+    },
+
+    startAutoSlide() {
+      this.stopAutoSlide();
+      this.interval = setInterval(() => {
+        this.next();
+      }, 3000); // 3s
+    },
+
+    stopAutoSlide() {
+      if (this.interval) clearInterval(this.interval);
+    },
+
+    next() {
+      this.currentIndex = (this.currentIndex + 1) % this.cards.length;
+    },
+
+    goTo(i) {
+      this.currentIndex = i;
+    }
+  }
+}
+
+
         function checkout() {
             return {
                 customer: {
@@ -1260,13 +1281,7 @@ fbq('track', 'PageView');
                                 this.errors.email = '';
                             }
                             break;
-                        case 'email_confirmation':
-                            if (this.customer.email !== this.customer.email_confirmation) {
-                                this.errors.email_confirmation = 'Os e-mails não coincidem.';
-                            } else {
-                                this.errors.email_confirmation = '';
-                            }
-                            break;
+
                         case 'phone':
                             const phone = this.customer.phone.replace(/\D/g, '');
                             if (!this.customer.phone) {

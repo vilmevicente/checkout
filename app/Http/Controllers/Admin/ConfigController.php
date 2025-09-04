@@ -36,6 +36,10 @@ class ConfigController extends Controller
             'recaptcha_enabled' => 'nullable|in:0,1,on,off',
             'recaptcha_site_key' => 'nullable|string|max:255',
             'recaptcha_secret_key' => 'nullable|string|max:255',
+            'order_confirmation_template' => 'string',
+            'content_delivery_template' => 'string',
+            'google_pixel_enabled' => 'nullable|in:0,1,on,off',
+            'google_pixel_id' => 'nullable|string|max:255',
         ]);
 
         // Processar as configurações que serão salvas no banco de dados
@@ -46,7 +50,7 @@ class ConfigController extends Controller
                 continue;
             }
 
-               if (in_array($key, ['facebook_pixel_enabled', 'recaptcha_enabled'])) {
+               if (in_array($key, ['facebook_pixel_enabled', 'recaptcha_enabled', 'google_pixel_enabled'])) {
         $value = $request->boolean($key);
     }
 

@@ -78,6 +78,13 @@ class ConfigHelper
         return (bool) self::get('facebook_pixel_enabled', false);
     }
 
+
+
+      public static function isGooglePixelEnabled()
+    {
+        return (bool) self::get('google_pixel_enabled', false);
+    }
+
     /**
      * Verificar se reCAPTCHA está ativo
      */
@@ -85,4 +92,6 @@ class ConfigHelper
     {
         return (bool) self::get('recaptcha_enabled', false);
     }
+
+
 }
