@@ -106,6 +106,18 @@
         <i class="fas fa-trash"></i>
         <span class="tooltip">Excluir Produto</span>
     </button>
+
+    <form 
+    id="delete-form-{{ $product->id }}"
+    action="{{ route('admin.products.destroy', $product) }}"
+    method="POST"
+    class="hidden" 
+
+        >
+        
+        @csrf
+@method('DELETE')
+    </form>
 </div>
 
                 </div>
