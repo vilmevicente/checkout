@@ -290,22 +290,41 @@ private function validatePixResponse($response)
         try {
             // Usar configurações SMTP do banco
             $smtpConfig = ConfigHelper::getSmtpConfig();
-            
-            \Mail::send('admin.emails.order-confirmation', ['order' => $order], function ($message) use ($order, $smtpConfig) {
-                $message->to($order->customer_email)
-                        ->subject('Confirmação do Pedido #' . $order->reference);
-                
-                if (!empty($smtpConfig['from']['address'])) {
-                    $message->from(
-                        $smtpConfig['from']['address'], 
-                        $smtpConfig['from']['name'] ?? config('app.name')
-                    );
-                }
-            });
 
-        } catch (\Exception $e) {
-            \Log::error('Erro ao enviar e-mail: ' . $e->getMessage());
-        }
+             // Buscar o template no BD
+        $content = ConfigHelper::get('order_confirmation_template');
+
+        $content = html_entity_decode($content);
+
+
+        \Log::info('Template bruto:', [$content]);
+
+ // Renderizar o template (substitui Blade tags {{ $order->... }} etc.)
+        $renderedContent = \Blade::render($content, ['order' => $order]);
+
+           // Dados que vão para a view/layout
+        $data = [
+            'subject' => 'Confirmação do Pedido #' . $order->reference,
+            'content' => $renderedContent,
+        ];
+
+       
+            
+           \Mail::send('admin.emails.layout', $data, function ($message) use ($order, $smtpConfig, $data) {
+            $message->to($order->customer_email)
+                    ->subject($data['subject']);
+
+            if (!empty($smtpConfig['from']['address'])) {
+                $message->from(
+                    $smtpConfig['from']['address'], 
+                    $smtpConfig['from']['name'] ?? config('app.name')
+                );
+            }
+        });
+
+    } catch (\Exception $e) {
+        \Log::error('Erro ao enviar e-mail: ' . $e->getMessage());
+    }
     }
 
     /**

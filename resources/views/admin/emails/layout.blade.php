@@ -31,8 +31,8 @@
 </head>
 <body>
     <div class="container">
-        {{-- Aqui injetamos o conteúdo salvo no DB --}}
-        {!! Blade::render($content, $data) !!}
-    </div>
+    {{-- Aqui injetamos o conteúdo salvo no DB --}}
+    {!! $content !!}
+</div>
 </body>
 </html>

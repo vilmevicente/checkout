@@ -171,72 +171,80 @@ private function sendProductEmail($order, $product)
     try {
         $smtpConfig = ConfigHelper::getSmtpConfig();
 
-\Mail::send('admin.emails.product-delivery', [
-    'order' => $order,
-    'product' => $product,
-    'deliveryContent' => $product->delivery_content, // incluir instruções de entrega
-    'customerName' => $order->customer_name
-], function ($message) use ($order, $product, $smtpConfig) {
-    $message->to($order->customer_email)
-        ->subject('Acesso ao ' . $product->name . ' - Pedido #' . $order->reference);
+        // Buscar o template do BD
+        $content = ConfigHelper::get('content_delivery_template');
 
-    if (!empty($smtpConfig['from']['address'])) {
-        $message->from(
-            $smtpConfig['from']['address'],
-            $smtpConfig['from']['name'] ?? config('app.name')
-        );
-    }
+        $content = html_entity_decode($content);
 
-// Anexar ficheiros do produto
-if ($product->attachments && $product->attachments->count() > 0) {
-    foreach ($product->attachments as $attachment) {
+        // Renderizar o conteúdo do template com variáveis
+        $renderedContent = \Blade::render($content, [
+            'order' => $order,
+            'product' => $product,
+            'deliveryContent' => $product->delivery_content,
+            'customerName' => $order->customer_name,
+        ]);
 
-        $relativePath = ltrim($attachment->file_path, '/'); // ex.: product-attachments/arquivo.ext
+        // Dados que vão para o layout
+        $data = [
+            'subject' => 'Acesso ao ' . $product->name . ' - Pedido #' . $order->reference,
+            'content' => $renderedContent,
+        ];
 
-        // 1) Caminho padrão via symlink: public/storage/<relativePath>
-        $absolutePath = public_path('storage/' . $relativePath);
+        \Mail::send('admin.emails.layout', $data, function ($message) use ($order, $product, $smtpConfig, $data) {
+            $message->to($order->customer_email)
+                ->subject($data['subject']);
 
-        // 2) Fallback: caso esteja direto em public/<relativePath>
-        if (!file_exists($absolutePath)) {
-            $absolutePath = public_path($relativePath);
-        }
-
-        // 3) Último fallback: disco 'public'
-        if (!file_exists($absolutePath) && \Storage::disk('public')->exists($relativePath)) {
-            $absolutePath = \Storage::disk('public')->path($relativePath);
-        }
-
-        \Log::info('Caminho para anexar: ' . $absolutePath);
-
-        if (file_exists($absolutePath)) {
-            try {
-                $downloadName = $attachment->name ?: ($product->name . '_anexo');
-                $ext = pathinfo($absolutePath, PATHINFO_EXTENSION);
-
-                if ($ext && !str_contains($downloadName, '.')) {
-                    $downloadName .= '.' . $ext;
-                }
-
-                $message->attach($absolutePath, ['as' => $downloadName]);
-                \Log::info('Anexo adicionado: ' . $downloadName);
-
-            } catch (\Exception $e) {
-                \Log::warning('Erro ao anexar arquivo ' . $absolutePath . ': ' . $e->getMessage());
-                continue;
+            if (!empty($smtpConfig['from']['address'])) {
+                $message->from(
+                    $smtpConfig['from']['address'],
+                    $smtpConfig['from']['name'] ?? config('app.name')
+                );
             }
-        } else {
-            \Log::warning('Arquivo não encontrado para anexar: ' . $absolutePath);
-        }
-    }
-}
 
-});
+            // 🔗 Anexar ficheiros do produto
+            if ($product->attachments && $product->attachments->count() > 0) {
+                foreach ($product->attachments as $attachment) {
+                    $relativePath = ltrim($attachment->file_path, '/');
+                    $absolutePath = public_path('storage/' . $relativePath);
+
+                    if (!file_exists($absolutePath)) {
+                        $absolutePath = public_path($relativePath);
+                    }
+
+                    if (!file_exists($absolutePath) && \Storage::disk('public')->exists($relativePath)) {
+                        $absolutePath = \Storage::disk('public')->path($relativePath);
+                    }
+
+                    \Log::info('Caminho para anexar: ' . $absolutePath);
+
+                    if (file_exists($absolutePath)) {
+                        try {
+                            $downloadName = $attachment->name ?: ($product->name . '_anexo');
+                            $ext = pathinfo($absolutePath, PATHINFO_EXTENSION);
+
+                            if ($ext && !str_contains($downloadName, '.')) {
+                                $downloadName .= '.' . $ext;
+                            }
+
+                            $message->attach($absolutePath, ['as' => $downloadName]);
+                            \Log::info('Anexo adicionado: ' . $downloadName);
+
+                        } catch (\Exception $e) {
+                            \Log::warning('Erro ao anexar arquivo ' . $absolutePath . ': ' . $e->getMessage());
+                            continue;
+                        }
+                    } else {
+                        \Log::warning('Arquivo não encontrado para anexar: ' . $absolutePath);
+                    }
+                }
+            }
+        });
 
         \Log::info('E-mail enviado para produto: ' . $product->name);
 
     } catch (\Exception $e) {
         \Log::error('Erro ao enviar e-mail para ' . $product->name . ': ' . $e->getMessage());
-        throw $e; // Re-throw para tratamento superior
+        throw $e;
     }
 }
 

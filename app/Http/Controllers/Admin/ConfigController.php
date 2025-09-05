@@ -54,6 +54,11 @@ class ConfigController extends Controller
         $value = $request->boolean($key);
     }
 
+
+// 🔑 Para os templates de email, salvamos o HTML cru
+        if (in_array($key, ['order_confirmation_template', 'content_delivery_template'])) {
+            $value = $request->input($key); // não escapa, salva raw
+        }
             
             Configuration::setValue($key, $value);
         }

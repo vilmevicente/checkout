@@ -190,49 +190,48 @@
 
 
 
+<!-- Seção Modelos de E-mail -->
+<div class="mb-8 border-t border-gray-200 pt-6">
+    <h4 class="text-md font-medium text-gray-900 mb-4">Modelos de E-mail</h4>
 
- <!-- Seção Modelos de E-mail -->
-                    <div class="mb-8 border-t border-gray-200 pt-6">
-                        <h4 class="text-md font-medium text-gray-900 mb-4">Modelos de E-mail</h4>
+    <!-- Confirmação de Pedido -->
+    <div class="mb-6">
+        <label for="order_confirmation_template" class="block text-sm font-medium text-gray-700">
+            Modelo de Confirmação de Pedido
+        </label>
+        <textarea 
+            name="order_confirmation_template" 
+            id="order_confirmation_template" 
+            rows="8"
+            class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
+        >{!! old('order_confirmation_template', $configs['order_confirmation_template']->value ?? '') !!}</textarea>
+        <p class="mt-1 text-sm text-gray-500">
+            Variáveis disponíveis: 
+            <code>{{ '{' }}{ $order->customer_name }}</code>, 
+            <code>{{ '{' }}{ $order->reference }}</code>, 
+            <code>{{ '{' }}{ $order->total }}</code>.
+        </p>
+    </div>
 
-                        <!-- Confirmação de Pedido -->
-                        <div class="mb-6">
-                            <label for="order_confirmation_template" class="block text-sm font-medium text-gray-700">
-                                Modelo de Confirmação de Pedido
-                            </label>
-                            <textarea 
-                                name="order_confirmation_template" 
-                                id="order_confirmation_template" 
-                                rows="8"
-                                class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
-                            >{!! old('order_confirmation_template', $configs['order_confirmation_template']->value ?? '') !!}</textarea>
-                            <p class="mt-1 text-sm text-gray-500">
-                                Variáveis disponíveis: <code>{{ '{' }}{ $order->customer_name }}</code>, 
-                                <code>{{ '{' }}{ $order->reference }}</code>, 
-                                <code>{{ '{' }}{ $order->total }}</code>.
-                            </p>
-                        </div>
-
-                        <!-- Envio de Conteúdo -->
-                        <div>
-                            <label for="content_delivery_template" class="block text-sm font-medium text-gray-700">
-                                Modelo de Envio de Conteúdo
-                            </label>
-                            <textarea 
-                                name="content_delivery_template" 
-                                id="content_delivery_template" 
-                                rows="8"
-                                class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
-                            >{!! old('content_delivery_template', $configs['content_delivery_template']->value ?? '') !!}</textarea>
-                            <p class="mt-1 text-sm text-gray-500">
-                                Variáveis disponíveis: <code>{{ '{' }}{ $user->name }}</code>, 
-                                <code>{{ '{' }}{ $content->title }}</code>, 
-                                <code>{{ '{' }}{ $content->link }}</code>.
-                            </p>
-                        </div>
-                    </div>
-
-
+    <!-- Envio de Conteúdo -->
+    <div>
+        <label for="content_delivery_template" class="block text-sm font-medium text-gray-700">
+            Modelo de Envio de Conteúdo
+        </label>
+        <textarea 
+            name="content_delivery_template" 
+            id="content_delivery_template" 
+            rows="8"
+            class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
+        >{!! old('content_delivery_template', $configs['content_delivery_template']->value ?? '') !!}</textarea>
+        <p class="mt-1 text-sm text-gray-500">
+            Variáveis disponíveis: 
+            <code>{{ '{' }}{ $user->name }}</code>, 
+            <code>{{ '{' }}{ $content->title }}</code>, 
+            <code>{{ '{' }}{ $content->link }}</code>.
+        </p>
+    </div>
+</div>
 
 
 
@@ -350,24 +349,54 @@
 
 
 <!-- CKEditor 5 -->
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<!-- Place the first <script> tag in your HTML's <head> -->
+<script src="https://cdn.tiny.cloud/1/qh7kr5myhfgb9mub891hdfvyy6x17m13fta2wy9p6x9saho2/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
 <script>
-    document.querySelectorAll('.html-editor').forEach((el) => {
-        ClassicEditor
-            .create(el, {
-                toolbar: [
-                    'undo','redo','|',
-                    'heading','|',
-                    'bold','italic','underline',,'|',
-                    
-                    
-                ],
-                
-            })
-            .catch(error => {
-                console.error(error);
-            });
+tinymce.init({
+    selector: '.html-editor',
+    menubar: false,
+    toolbar: 'code',
+    plugins: 'code',
+    height: 400,
+    branding: false,
+    entity_encoding: 'raw',
+    verify_html: false,     // <- não valida/limpa o HTML
+  valid_elements: '*[*]', // <- permite tudo
+ 
+   setup: function (editor) {
+
+    // Bloquear edição no modo visual
+    editor.on('init', function () {
+      const body = editor.getBody();
+      body.setAttribute('contenteditable', false);
+
+      // Previne colar/teclar no editor visual
+      editor.dom.bind(body, 'keydown paste input', function (e) {
+        e.preventDefault();
+        return false;
+      });
     });
+
+    // Quando abrir o modal de código, permitir edição
+    editor.on('ExecCommand', function (e) {
+      if (e.command === 'mceCodeEditor') {
+        setTimeout(() => {
+          const textarea = document.querySelector('.tox-textarea');
+          if (textarea) {
+            textarea.removeAttribute('readonly'); // garante edição no modal
+          }
+        }, 100);
+      }
+    });
+
+    // Depois de salvar no código → volta a bloquear o visual
+    editor.on('SetContent', function () {
+      editor.getBody().setAttribute('contenteditable', false);
+    });
+  }
+});
+  
 </script>
 
 
