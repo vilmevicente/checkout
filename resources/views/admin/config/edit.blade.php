@@ -3,6 +3,11 @@
 @section('title', 'Configurações do Checkout')
 
 @section('content')
+
+<!-- CKEditor 5 -->
+<!-- Place the first <script> tag in your HTML's <head> -->
+<script src="https://cdn.tiny.cloud/1/qh7kr5myhfgb9mub891hdfvyy6x17m13fta2wy9p6x9saho2/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
 <div class="bg-white shadow rounded-lg max-w-4xl mx-auto">
      <div class="container mx-auto px-4 py-8">
         <div class="bg-white shadow rounded-lg max-w-4xl mx-auto">
@@ -195,42 +200,78 @@
     <h4 class="text-md font-medium text-gray-900 mb-4">Modelos de E-mail</h4>
 
     <!-- Confirmação de Pedido -->
-    <div class="mb-6">
-        <label for="order_confirmation_template" class="block text-sm font-medium text-gray-700">
-            Modelo de Confirmação de Pedido
-        </label>
-        <textarea 
-            name="order_confirmation_template" 
-            id="order_confirmation_template" 
-            rows="8"
-            class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
-        >{!! old('order_confirmation_template', $configs['order_confirmation_template']->value ?? '') !!}</textarea>
-        <p class="mt-1 text-sm text-gray-500">
-            Variáveis disponíveis: 
-            <code>{{ '{' }}{ $order->customer_name }}</code>, 
-            <code>{{ '{' }}{ $order->reference }}</code>, 
-            <code>{{ '{' }}{ $order->total }}</code>.
-        </p>
-    </div>
+<div>
+    <label for="order_confirmation_template" class="block text-sm font-medium text-gray-700">
+        Modelo de Confirmação de Pedido
+    </label>
+    <textarea 
+        name="order_confirmation_template" 
+        id="order_confirmation_template" 
+        rows="10"
+        class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
+    >{!! old('order_confirmation_template', $configs['order_confirmation_template']->value ?? '') !!}</textarea>
+    
+    <!-- Botão Restaurar -->
+    <button 
+        type="button" 
+        onclick="restoreDefaultOrderTemplate()" 
+        class="mt-2 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md text-sm font-medium text-gray-700 shadow-sm"
+    >
+        Restaurar Padrão
+    </button>
 
-    <!-- Envio de Conteúdo -->
-    <div>
-        <label for="content_delivery_template" class="block text-sm font-medium text-gray-700">
-            Modelo de Envio de Conteúdo
-        </label>
-        <textarea 
-            name="content_delivery_template" 
-            id="content_delivery_template" 
-            rows="8"
-            class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
-        >{!! old('content_delivery_template', $configs['content_delivery_template']->value ?? '') !!}</textarea>
-        <p class="mt-1 text-sm text-gray-500">
-            Variáveis disponíveis: 
-            <code>{{ '{' }}{ $user->name }}</code>, 
-            <code>{{ '{' }}{ $content->title }}</code>, 
-            <code>{{ '{' }}{ $content->link }}</code>.
-        </p>
-    </div>
+    <p class="mt-1 text-sm text-gray-500">
+        Variáveis disponíveis: <br>
+        <code>{{ '{' }}{ $order->customer_name }}</code> → Nome do cliente. <br>
+        <code>{{ '{' }}{ $order->reference }}</code> → Número de referência do pedido. <br>
+        <code>{{ '{' }}{ $order->total }}</code> → Valor total do pedido. <br>
+        <code>{{ '{' }}{ $order->mainProduct() }}</code> → Produto principal do pedido. <br>
+        <code>{{ '{' }}{ $order->upsells() }}</code> → Produtos adicionais (upsells). <br>
+        <code>{{ '{' }}{ $order->payment_method }}</code> → Método de pagamento. <br>
+        <code>{{ '{' }}{ $order->pix_code }}</code> → Código PIX (se aplicável). <br>
+        <code>{{ '{' }}{ $order->pix_expires_at }}</code> → Data de expiração do PIX. <br>
+        <code>{{ '{' }}{ config('app.name') }}</code> → Nome da aplicação/equipe.
+    </p>
+</div>
+
+<!-- Envio de Produto / Conteúdo -->
+<div>
+    <label for="content_delivery_template" class="block text-sm font-medium text-gray-700">
+        Modelo de Envio de Produto
+    </label>
+    <textarea 
+        name="content_delivery_template" 
+        id="content_delivery_template" 
+        rows="10"
+        class="html-editor mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 font-mono focus:ring-indigo-500 focus:border-indigo-500"
+    >{!! old('content_delivery_template', $configs['content_delivery_template']->value ?? '') !!}</textarea>
+    
+    <!-- Botão Restaurar -->
+    <button 
+        type="button" 
+        onclick="restoreDefaultProductTemplate()" 
+        class="mt-2 px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-md text-sm font-medium text-gray-700 shadow-sm"
+    >
+        Restaurar Padrão
+    </button>
+
+    <p class="mt-1 text-sm text-gray-500">
+        Variáveis disponíveis: <br>
+        <code>{{ '{' }}{ $customerName }}</code> → Nome do cliente. <br>
+        <code>{{ '{' }}{ $product->name }}</code> → Nome do produto adquirido. <br>
+        <code>{{ '{' }}{ $deliveryContent }}</code> → Texto/HTML com o conteúdo entregue. <br>
+        <code>{{ '{' }}{ $product->attachments }}</code> → Lista de anexos do produto. <br>
+        <code>{{ '{' }}{ $attachment->name }}</code> → Nome de cada anexo. <br>
+        <code>{{ '{' }}{ $attachment->file_size }}</code> → Tamanho bruto do anexo. <br>
+        <code>{{ '{' }}{ $attachment->formatted_size }}</code> → Tamanho do anexo formatado (ex.: 2 MB). <br>
+        <code>{{ '{' }}{ config('app.name') }}</code> → Nome da aplicação/equipe.
+    </p>
+
+</div>
+
+
+
+
 </div>
 
 
@@ -348,9 +389,119 @@
 
 
 
-<!-- CKEditor 5 -->
-<!-- Place the first <script> tag in your HTML's <head> -->
-<script src="https://cdn.tiny.cloud/1/qh7kr5myhfgb9mub891hdfvyy6x17m13fta2wy9p6x9saho2/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
+
+
+<script>
+function restoreDefaultProductTemplate() {
+    const defaultTemplate = `
+@verbatim
+<h1>Olá, {{ $customerName }}!</h1>
+
+<p>Obrigado por adquirir o produto: <strong>{{ $product->name }}</strong>.</p>
+
+@if($deliveryContent)
+    <div style="margin:15px 0;padding:10px;background:#f9f9f9;border-left:4px solid #4CAF50;">
+        {!! $deliveryContent !!}
+    </div>
+@endif
+
+@if($product->attachments && $product->attachments->count() > 0)
+    <h3>Anexos incluídos:</h3>
+    <ul>
+        @foreach($product->attachments as $attachment)
+            <li>
+                <strong>{{ $attachment->name }}</strong>
+                @if($attachment->file_size)
+                    ({{ $attachment->formatted_size }})
+                @endif
+            </li>
+        @endforeach
+    </ul>
+@endif
+
+<p>
+    Atenciosamente,<br>
+    <strong>Equipe {{ config('app.name') }}</strong>
+</p>
+@endverbatim
+    `.trim();
+
+    document.getElementById('content_delivery_template').value = defaultTemplate;
+    document.getElementById('content_delivery_template').form.submit();
+}
+
+
+function restoreDefaultOrderTemplate() {
+    const defaultTemplate = `
+@verbatim
+<div class="container">
+    <h1>Confirmação do Pedido #{{ $order->reference }}</h1>
+    <p>Olá <strong>{{ $order->customer_name }}</strong>,</p>
+    <p>Obrigado pela sua compra! Recebemos o seu pedido e já estamos a processá-lo.</p>
+
+    <div class="order-details">
+        <h2>Produto Principal:</h2>
+        @if($order->mainProduct())
+            <p><strong>{{ $order->mainProduct()->product->name }}</strong></p>
+            <p>Preço: R$ {{ number_format($order->mainProduct()->price, 2, ',', '.') }}</p>
+        @endif
+
+        @if($order->upsells()->count() > 0)
+            <h2>Produtos Adicionais:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd</th>
+                        <th>Preço</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($order->upsells() as $upsell)
+                        <tr>
+                            <td>{{ $upsell->product->name }}</td>
+                            <td>{{ $upsell->quantity }}</td>
+                            <td>R$ {{ number_format($upsell->price, 2, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
+        <h2>Total:</h2>
+        <p class="total">R$ {{ number_format($order->total, 2, ',', '.') }}</p>
+    </div>
+
+    @if($order->payment_method === 'pix')
+        <div class="pix-box">
+            <h2>Pagamento via PIX</h2>
+            <p><strong>Código PIX:</strong></p>
+            <pre>{{ $order->pix_code }}</pre>
+            @if($order->pix_expires_at)
+                <p><strong>Expira em:</strong> {{ $order->pix_expires_at->format('d/m/Y H:i') }}</p>
+            @endif
+        </div>
+    @endif
+
+    <div class="footer">
+        <p>Se tiver alguma dúvida, entre em contacto com a nossa equipa.</p>
+        <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Todos os direitos reservados.</p>
+    </div>
+</div>
+@endverbatim
+    `.trim();
+
+    document.getElementById('order_confirmation_template').value = defaultTemplate;
+    document.getElementById('order_confirmation_template').form.submit();
+}
+</script>
+
+</script>
+
+
+
+
 
 <script>
 tinymce.init({
