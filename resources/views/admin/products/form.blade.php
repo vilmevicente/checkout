@@ -35,12 +35,12 @@
                 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Preço *</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preço com Desconto *</label>
                         <input type="number" step="0.01" name="price" x-model="formData.price" required
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Preço Original</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Preço sem Desconto</label>
                         <input type="number" step="0.01" name="original_price" x-model="formData.original_price"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                     </div>
@@ -81,36 +81,54 @@
         </div>
 
         <!-- Banners por Upload -->
-        <div class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-                <i class="fas fa-image mr-2"></i> Banners
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Banner Principal</label>
-                    <input type="file" name="main_banner" accept="image/*"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    @if(isset($product) && $product->main_banner)
-                    <div class="mt-2">
-                        <img src="/storage/{{ $product->main_banner }}" alt="Banner principal" class="h-20 object-cover rounded">
-                        <p class="text-xs text-gray-500 mt-1">Banner atual</p>
-                    </div>
-                    @endif
+<div class="mb-8" x-data="bannerManager({ 
+        main: '{{ $product->main_banner ?? '' }}', 
+        secondary: '{{ $product->secondary_banner ?? '' }}' 
+    })">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+        <i class="fas fa-image mr-2"></i> Banners
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {{-- Banner Principal --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Banner Principal (Tamanho ideal: 1000x307)</label>
+            <input type="file" name="main_banner" accept="image/*"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+
+            <template x-if="banners.main">
+                <div class="mt-2">
+                    <img :src="'/storage/' + banners.main" alt="Banner principal" class="h-20 object-cover rounded">
+                    <p class="text-xs text-gray-500 mt-1">Banner atual</p>
+                    <button type="button" @click="remove('main')"
+                            class="mt-1 text-xs text-red-600 hover:underline">
+                        Remover banner
+                    </button>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Banner Secundário</label>
-                    <input type="file" name="secondary_banner" accept="image/*"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    @if(isset($product) && $product->secondary_banner)
-                    <div class="mt-2">
-                        <img src="/storage/{{ $product->secondary_banner}}" alt="Banner secundário" class="h-20 object-cover rounded">
-                        <p class="text-xs text-gray-500 mt-1">Banner atual</p>
-                    </div>
-                    @endif
-                </div>
-            </div>
+            </template>
+            <input type="hidden" name="remove_main_banner" x-model="removed.main">
         </div>
+
+        {{-- Banner Secundário --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Banner Secundário (Tamanho ideal: 300x533)</label>
+            <input type="file" name="secondary_banner" accept="image/*"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+
+            <template x-if="banners.secondary">
+                <div class="mt-2">
+                    <img :src="'/storage/' + banners.secondary" alt="Banner secundário" class="h-20 object-cover rounded">
+                    <p class="text-xs text-gray-500 mt-1">Banner atual</p>
+                    <button type="button" @click="remove('secondary')"
+                            class="mt-1 text-xs text-red-600 hover:underline">
+                        Remover banner
+                    </button>
+                </div>
+            </template>
+            <input type="hidden" name="remove_secondary_banner" x-model="removed.secondary">
+        </div>
+    </div>
+</div>
 
         <!-- Features/Benefícios -->
         <div class="mb-8">
@@ -226,6 +244,7 @@
     <label class="block text-sm font-medium text-gray-700 mb-2">Conteúdo para Email</label>
     <textarea 
         id="delivery_content"
+        name="delivery_content"
         class="delivery_content w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
         x-ref="deliveryEditor"
         x-init="
@@ -301,7 +320,7 @@
   <!-- Métodos de Entrega -->
     <div class="mb-8">
         <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-            <i class="fas fa-paper-plane mr-2 text-blue-500"></i> Métodos de Entrega *
+            <i class="fas fa-paper-plane mr-2 "></i> Métodos de Entrega *
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -377,6 +396,76 @@
             </label>
         </div>
 
+
+<!-- Novos Campos Extras -->
+<div class="mb-8">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+        <i class="fas fa-plus-circle mr-2"></i> Texto Personalizado Checkout (Opcional)
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Upsells Title -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Título dos Upsells</label>
+            <input type="text" name="upsells_title" x-model="formData.upsells_title"
+                   value="{{ old('upsells_title', $product->upsells_title ?? '') }}"
+                   placeholder="Valor padrão: Adicione e Economize Mais"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        </div>
+
+        <!-- Reviews Title -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Título das Reviews</label>
+            <input type="text" name="reviews_title" x-model="formData.reviews_title"
+                   value="{{ old('reviews_title', $product->reviews_title ?? '') }}"
+                   placeholder="Valor Padrão: O que nossos clientes dizem"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <!-- Timer Text -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Texto do Timer</label>
+            <input type="text" name="timer_text" x-model="formData.timer_text"
+                   value="{{ old('timer_text', $product->timer_text ?? '') }}"
+                   placeholder="Valor padrão: Aproveite agora o desconto especial!"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        </div>
+
+        <!-- Features Button Text -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Texto do Botão de Features</label>
+            <input type="text" name="features_button_text" x-model="formData.features_button_text"
+                   value="{{ old('features_button_text', $product->features_button_text ?? '') }}"
+                   placeholder="Valor padrão: SEUS BENEFÍCIOS EXCLUSIVOS "
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        </div>
+    </div>
+
+    <!-- Features Icon (ícone padrão geral para lista de benefícios, se precisar) -->
+    <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Ícone Padrão para Features</label>
+        <select name="features_icon" x-model="formData.features_icon"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+            <option value="">Selecione um ícone</option>
+            <option value="fa-bolt" {{ isset($product) && $product->features_icon === 'fa-bolt' ? 'selected' : '' }}>⚡ Lightning (fa-bolt)</option>
+            <option value="fa-whatsapp" {{ isset($product) && $product->features_icon === 'fa-whatsapp' ? 'selected' : '' }}>💬 WhatsApp (fa-whatsapp)</option>
+            <option value="fa-crown" {{ isset($product) && $product->features_icon === 'fa-crown' ? 'selected' : '' }}>👑 Premium (fa-crown)</option>
+            <option value="fa-gift" {{ isset($product) && $product->features_icon === 'fa-gift' ? 'selected' : '' }}>🎁 Presente (fa-gift)</option>
+            <option value="fa-clock" {{ isset($product) && $product->features_icon === 'fa-clock' ? 'selected' : '' }}>⏰ Tempo (fa-clock)</option>
+            <option value="fa-shield" {{ isset($product) && $product->features_icon === 'fa-shield' ? 'selected' : '' }}>🛡️ Segurança (fa-shield)</option>
+            <option value="fa-rocket" {{ isset($product) && $product->features_icon === 'fa-rocket' ? 'selected' : '' }}>🚀 Foguete (fa-rocket)</option>
+            <option value="fa-users" {{ isset($product) && $product->features_icon === 'fa-users' ? 'selected' : '' }}>👥 Usuários (fa-users)</option>
+            <option value="fa-mobile" {{ isset($product) && $product->features_icon === 'fa-mobile' ? 'selected' : '' }}>📱 Mobile (fa-mobile)</option>
+            <option value="fa-globe" {{ isset($product) && $product->features_icon === 'fa-globe' ? 'selected' : '' }}>🌎 Global (fa-globe)</option>
+        </select>
+    </div>
+</div>
+
+
+
+
         <!-- Botões de Ação -->
         <div class="flex justify-end space-x-4">
             <a href="{{ route('admin.products.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-lg transition">
@@ -396,6 +485,25 @@
 
 
 <script>
+
+
+function bannerManager(initial) {
+    return {
+        banners: {
+            main: initial.main || '',
+            secondary: initial.secondary || '',
+        },
+        removed: {
+            main: '',
+            secondary: '',
+        },
+        remove(type) {
+            this.banners[type] = '';       // remove visualmente
+            this.removed[type] = '1';      // backend vai saber que removeu
+        }
+    }
+}
+
 function productForm() {
     return {
         formData: {
@@ -410,7 +518,12 @@ function productForm() {
             attachments: @json($attachmentsData ?? []),
             features: @json($featuresData ?? []),
             testimonials: @json($testimonialsData ?? []),
-            delivery_methods: @json($deliveryMethodsData ?? [])
+            delivery_methods: @json($deliveryMethodsData ?? []),
+            upsells_title: '{{ old('upsells_title', isset($product) ? $product->upsells_title : '') }}',
+            features_icon: '{{ old('features_icon', isset($product) ? $product->features_icon : '') }}',
+            features_button_text: '{{ old('features_button_text', isset($product) ? $product->features_button_text : '') }}',
+            reviews_title:'{{ old('reviews_title', isset($product) ? $product->reviews_title : '') }}',
+            timer_text: '{{ old('timer_text', isset($product) ? $product->timer_text : '') }}',
 
         },
         
@@ -448,6 +561,7 @@ function productForm() {
 
         removeTestimonial(index) {
             this.formData.testimonials.splice(index, 1);
+
         },
 
         addUpsell() {
@@ -493,6 +607,13 @@ function productForm() {
         submitForm() {
             if (!this.formData.name || !this.formData.price || this.formData.delivery_methods.length === 0) {
                 alert('Por favor, preencha os campos obrigatórios.');
+                return;
+            }
+
+
+
+            if (this.formData.original_price < this.formData.price) {
+                alert('O preço de com desconto nunca pode ser maior que o preço real do produto.');
                 return;
             }
 

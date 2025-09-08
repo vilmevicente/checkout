@@ -57,7 +57,24 @@ public function store(Request $request)
         'testimonials.*.username' => 'required|string|max:100',
         'testimonials.*.text' => 'required|string|max:500',
         'testimonials.*.image' => 'nullable|url',
+        'upsells_title' => 'nullable|string|max:255',
+    'reviews_title' => 'nullable|string|max:255',
+    'timer_text' => 'nullable|string|max:255',
+    'features_button_text' => 'nullable|string|max:255',
+    'features_icon' => 'nullable|string|max:100',
     ]);
+
+
+
+    
+// VALIDAÇÃO DO PREÇO: Verificar se o preço com desconto é maior que o preço original
+    if ($request->has('original_price') && $request->original_price !== null) {
+        if ($request->original_price < $request->price) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['price' => 'O preço de com desconto nunca pode ser maior que o preço real do produto.']);
+        }
+    }
 
     // Verificar se o método de entrega requer arquivos
     $filesMethod = DeliveryMethod::where('type', 'files')->first();
@@ -230,7 +247,45 @@ public function update(Request $request, Product $product)
         'testimonials.*.username' => 'required|string|max:100',
         'testimonials.*.text' => 'required|string|max:500',
         'testimonials.*.image' => 'nullable|url',
+        'upsells_title' => 'nullable|string|max:255',
+    'reviews_title' => 'nullable|string|max:255',
+    'timer_text' => 'nullable|string|max:255',
+    'features_button_text' => 'nullable|string|max:255',
+    'features_icon' => 'nullable|string|max:100',
     ]);
+
+
+
+
+
+    // 🔹 Se removeu o banner principal
+    if ($request->input('remove_main_banner') == '1') {
+        if ($product->main_banner) {
+            Storage::delete('storage/'. $product->main_banner); // remove do disco
+        }
+        $product->main_banner = null;
+    } 
+
+    // 🔹 Se removeu o banner secundário
+    if ($request->input('remove_secondary_banner') == '1') {
+        if ($product->secondary_banner) {
+            Storage::delete('storage/' . $product->secondary_banner);
+        }
+        $product->secondary_banner = null;
+    }
+
+
+
+    // VALIDAÇÃO DO PREÇO: Verificar se o preço com desconto é maior que o preço original
+    if ($request->has('original_price') && $request->original_price !== null) {
+        if ($request->original_price < $request->price) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['price' => 'O preço de com desconto nunca pode ser maior que o preço real do produto.']);
+        }
+    }
+
+
 
     // Verificar se o método de entrega requer arquivos
     $filesMethod = DeliveryMethod::where('type', 'files')->first();
@@ -282,6 +337,8 @@ public function update(Request $request, Product $product)
         foreach ($request->features as $featureData) {
             $product->features()->create($featureData);
         }
+    }else {
+         $product->features()->delete();
     }
 
     // Sincronizar testimonials
@@ -290,7 +347,11 @@ public function update(Request $request, Product $product)
         foreach ($request->testimonials as $testimonialData) {
             $product->testimonials()->create($testimonialData);
         }
+    } else 
+    {
+        $product->testimonials()->delete();
     }
+
 
     $upsellsData = [];
     if ($request->has('upsells')) {
@@ -375,7 +436,7 @@ public function update(Request $request, Product $product)
         }
     }
 
-    return redirect()->route('admin.products.index')
+    return redirect()->route('admin.products.edit', $product)
                      ->with('success', 'Produto atualizado com sucesso!');
 }
 

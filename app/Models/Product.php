@@ -21,7 +21,13 @@ class Product extends Model
         'secondary_banner',
         'delivery_content',
         'is_active',
-        'success_redirect_link'
+        'success_redirect_link',
+         'upsells_title',
+    'reviews_title',
+    'timer_text',
+    'features_button_text',
+    'features_icon',
+
     ];
 
     protected $casts = [

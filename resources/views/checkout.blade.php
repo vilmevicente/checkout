@@ -661,12 +661,15 @@ fbq('track', 'PageView');
 
                     </div> <!----></div> <!----></div> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#4f46e5" width="36px" height="36px" class="mx-4"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg> 
     
-    <div class="text-sm font-medium" id="timerText">
-            Aproveite agora o desconto especial!
-          </div> </div></div></div></div></div>
+   <div class="text-sm font-medium" id="timerText">
+    {{ $mainProduct['timer_text'] ?? 'Aproveite agora o desconto especial!' }}
+</div>
+ </div></div></div></div></div>
 
-        <!-- Banner principal -->
-        <img src="/storage/{{ $mainProduct['main_banner'] }}" alt="Banner Principal" class="w-full mb-8 rounded-lg shadow-card">
+        @if(!empty($mainProduct['main_banner']))
+    <img src="/storage/{{ $mainProduct['main_banner'] }}" alt="Banner Principal" 
+         class="w-full mb-8 rounded-lg shadow-card">
+@endif
 
        
       
@@ -800,11 +803,21 @@ fbq('track', 'PageView');
                             <div class="flex-1">
                                 <h3 class="font-medium text-sm">{{ $mainProduct['name'] }}</h3>
                                 <div class="flex items-center gap-2 mt-1">
-                                    <span class="font-bold text-indigo-600">R$ {{ number_format($mainProduct['price'], 2, ',', '.') }}</span>
-                                    <span class="text-sm text-gray-500 line-through">
-                                        R$ {{ number_format($mainProduct['original_price'], 2, ',', '.') }}
-                                    </span>
-                                </div>
+    <span class="font-bold text-indigo-600">
+        R$ {{ number_format($mainProduct['price'], 2, ',', '.') }}
+    </span>
+
+    @if($mainProduct['original_price'] > $mainProduct['price'])
+        <span class="text-sm text-gray-500 line-through">
+            R$ {{ number_format($mainProduct['original_price'], 2, ',', '.') }}
+        </span>
+        <span class="text-green-600 text-sm font-medium">
+            Você economiza 
+            R$ {{ number_format($mainProduct['original_price'] - $mainProduct['price'], 2, ',', '.') }}
+        </span>
+    @endif
+</div>
+
                             </div>
                         </div>
 
@@ -822,13 +835,20 @@ fbq('track', 'PageView');
                             </div>
                         </div>
 
-                        <div class="border-t border-gray-200 my-4"></div>
+                        <div x-show="totalSavings > 0" class="border-t border-gray-200 my-4"></div>
 
                         <!-- Savings -->
-                        <div class="flex justify-between items-center text-sm mb-4">
-                            <span class="text-gray-600">Você está economizando:</span>
-                            <span id="savings-amount" class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded" x-text="'R$ ' + formatPrice(totalSavings)"></span>
-                        </div>
+<div 
+    x-show="totalSavings > 0"
+    class="flex justify-between items-center text-sm mb-4"
+>
+    <span class="text-gray-600">Você está economizando:</span>
+    <span 
+        id="savings-amount" 
+        class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded" 
+        x-text="'R$ ' + formatPrice(totalSavings)">
+    </span>
+</div>
 
                         <!-- Total -->
                         <div class="flex justify-between items-center text-lg font-bold pt-2 border-t border-gray-200">
@@ -871,9 +891,12 @@ fbq('track', 'PageView');
                     </div>
 
 
+@if(!empty($upsells))
                       <!-- Upsells Section -->
                     <div class="bg-white rounded-xl shadow-elevated p-6 mb-8">
-                        <h2 class="text-lg font-semibold mb-6">Adicione e Economize Mais</h2>
+                        <h2 class="text-lg font-semibold mb-6">
+    {{ $mainProduct['upsells_title'] ?? 'Adicione e Economize Mais' }}
+</h2>
 
                         @foreach($upsells as $index => $upsell)
                         @php
@@ -910,12 +933,18 @@ fbq('track', 'PageView');
                         @endforeach
                     </div>
 
+@endif
+
+
 
                     <!-- Benefits Section SIMPLES -->
 <div>
-     <div class="benefits-banner">
-            <i class="fas fa-gift mr-2"></i> SEUS BENEFÍCIOS EXCLUSIVOS
-        </div>
+    <div x-show="features.length > 0" class="benefits-banner">
+        <i class="fas fa-gift mr-2"></i> 
+        {{ $mainProduct['features_button_text'] ?? 'SEUS BENEFÍCIOS EXCLUSIVOS' }}
+
+</div>
+
 
         <!-- Slider de Benefícios -->
       
@@ -969,12 +998,21 @@ fbq('track', 'PageView');
 
                 <!-- Right Column - Summary -->
                 <div class="space-y-6">
-                    <!-- Secondary Banner -->
-                    <img src="/storage/{{ $mainProduct['secondary_banner'] }}" alt="Banner Secundário" class="w-full mb-4 rounded-lg shadow-card">
 
+@if(!empty($mainProduct['secondary_banner']))
+    <!-- Secondary Banner -->
+                    <img src="/storage/{{ $mainProduct['secondary_banner'] }}" alt="Banner Secundário" class="w-full mb-4 rounded-lg shadow-card">
+@endif
+
+
+                    
+@if($depoimentos->count()>0)
                     <!-- Depoimentos -->
                     <div class="bg-indigo-50 rounded-xl shadow-inner p-6 mb-8">
-                        <h2 class="text-lg font-semibold mb-4">O que nossos clientes dizem</h2>
+                        
+                        <h2 class="text-lg font-semibold mb-6">
+    {{ $mainProduct['reviews_title'] ?? 'O que nossos clientes dizem' }}
+</h2>
 
                         @foreach($depoimentos as $testimonial)
                         <div class="flex items-start mb-6">
@@ -995,6 +1033,7 @@ fbq('track', 'PageView');
                         @endforeach
                     </div>
 
+@endif
                     <!-- Security Badges -->
                     <div class="bg-white rounded-xl shadow-card p-6">
                         <h2 class="text-lg font-semibold mb-4">Segurança</h2>
@@ -1111,7 +1150,7 @@ fbq('track', 'PageView');
 
     <script>
         // Configuração do timer de desconto (15 minutos)
-        let timeInMinutes = 15;
+        let timeInMinutes = {{ App\Helpers\ConfigHelper::get("checkout_timeout_minutes") }};
         let currentTime = Date.parse(new Date());
         let deadline = new Date(currentTime + timeInMinutes * 60 * 1000);
 
@@ -1127,6 +1166,9 @@ fbq('track', 'PageView');
 
             if (timeLeft < 0) {
                 clearInterval(timerInterval);
+
+                document.getElementById("countdown-timer").innerHTML =
+                `<span>00</span>:<span >00</span>`;
                 document.getElementById("timerText").innerHTML = "EXPIRADO!";
             }
         }
