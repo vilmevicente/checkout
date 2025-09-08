@@ -891,7 +891,7 @@ fbq('track', 'PageView');
                     </div>
 
 
-@if(!empty($upsells))
+@if($upsells->count()>0)
                       <!-- Upsells Section -->
                     <div class="bg-white rounded-xl shadow-elevated p-6 mb-8">
                         <h2 class="text-lg font-semibold mb-6">
