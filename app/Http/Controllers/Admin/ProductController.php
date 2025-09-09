@@ -62,6 +62,10 @@ public function store(Request $request)
     'timer_text' => 'nullable|string|max:255',
     'features_button_text' => 'nullable|string|max:255',
     'features_icon' => 'nullable|string|max:100',
+    'produto_com_desconto' => 'nullable|in:0,1,on,off',
+     'discount_price' => $request->produto_com_desconto
+        ? 'required|numeric|min:0|lt:price' // obrigatório e menor que price
+        : 'nullable|numeric|min:0',
     ]);
 
 
@@ -228,7 +232,6 @@ public function update(Request $request, Product $product)
         'name' => 'required|string|max:255',
         'slug' => 'nullable|string|max:255|unique:products,slug,' . $product->id,
         'price' => 'required|numeric|min:0',
-        'original_price' => 'nullable|numeric|min:0',
         'description' => 'nullable|string',
         'main_banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'secondary_banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -252,11 +255,18 @@ public function update(Request $request, Product $product)
     'timer_text' => 'nullable|string|max:255',
     'features_button_text' => 'nullable|string|max:255',
     'features_icon' => 'nullable|string|max:100',
+    'produto_com_desconto' => 'nullable|in:0,1,on,off',
+     'original_price' => $request->produto_com_desconto //discount_price!!!
+        ? 'required|numeric|min:0|lt:price' // obrigatório e menor que price
+        : 'nullable|numeric|min:0',
     ]);
 
 
 
 
+ if ($request->input('produto_com_desconto')) {
+        $value = $request->boolean('produto_com_desconto');
+    }
 
     // 🔹 Se removeu o banner principal
     if ($request->input('remove_main_banner') == '1') {
@@ -278,10 +288,10 @@ public function update(Request $request, Product $product)
 
     // VALIDAÇÃO DO PREÇO: Verificar se o preço com desconto é maior que o preço original
     if ($request->has('original_price') && $request->original_price !== null) {
-        if ($request->original_price < $request->price) {
+        if ($request->original_price > $request->price) {
             return redirect()->back()
                 ->withInput()
-                ->withErrors(['price' => 'O preço de com desconto nunca pode ser maior que o preço real do produto.']);
+                ->withErrors(['price' => 'O preço com desconto nunca pode ser maior que o preço real do produto.']);
         }
     }
 

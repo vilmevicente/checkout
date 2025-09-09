@@ -27,7 +27,7 @@ class Product extends Model
     'timer_text',
     'features_button_text',
     'features_icon',
-
+'produto_com_desconto',
     ];
 
     protected $casts = [

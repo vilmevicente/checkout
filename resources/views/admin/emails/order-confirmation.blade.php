@@ -69,7 +69,7 @@
             <h2>Produto Principal:</h2>
             @if($order->mainProduct())
                 <p><strong>{{ $order->mainProduct()->product->name }}</strong></p>
-                <p>Preço: R$ {{ number_format($order->mainProduct()->price, 2, ',', '.') }}</p>
+                <p>Preço: R$ {{ $order->mainProduct()->product->produto_com_desconto}}</p>
             @endif
 
             @if($order->upsells()->count() > 0)

@@ -25,27 +25,48 @@
                 <i class="fas fa-info-circle mr-2"></i> Informações Básicas
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Produto *</label>
+
+
+<div class="mt-4">
+           <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Produto *</label>
                     <input type="text" name="name" x-model="formData.name" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                </div>
+    </div>
 
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Preço com Desconto *</label>
-                        <input type="number" step="0.01" name="price" x-model="formData.price" required
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Preço sem Desconto</label>
-                        <input type="number" step="0.01" name="original_price" x-model="formData.original_price"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                    </div>
-                </div>
-            </div>
+            <div class="grid mt-4 grid-cols-1 md:grid-cols-2 gap-6 items-center">
+    <!-- Preço normal (sempre visível) -->
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Preço</label>
+        <input type="number" step="0.01" name="price" 
+               x-model="formData.price" 
+               required
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+    </div>
+
+    <!-- Coluna com desconto -->
+    <div class="grid grid-cols-2 gap-4 items-center">
+        <!-- Checkbox -->
+        <div class="flex items-center">
+            <label class="inline-flex items-center">
+                <input type="checkbox" name="produto_com_desconto" 
+                       x-model="formData.produto_com_desconto" 
+                       value="1"
+                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
+                <span class="ml-2 text-sm text-gray-700">Produto com Desconto?</span>
+            </label>
+        </div>
+
+        <!-- Preço com desconto (só aparece se checkbox estiver marcado) -->
+        <div x-show="formData.produto_com_desconto" x-cloak>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Preço com Desconto *</label>
+            <input type="number" step="0.01" name="original_price" 
+                   x-model="formData.original_price" 
+                   :required="formData.produto_com_desconto"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        </div>
+    </div>
+</div>
+
 
 
              <!-- NOVO CAMPO: Success Redirect Link -->
@@ -524,6 +545,7 @@ function productForm() {
             features_button_text: '{{ old('features_button_text', isset($product) ? $product->features_button_text : '') }}',
             reviews_title:'{{ old('reviews_title', isset($product) ? $product->reviews_title : '') }}',
             timer_text: '{{ old('timer_text', isset($product) ? $product->timer_text : '') }}',
+            produto_com_desconto: {{  boolval(old('produto_com_desconto', isset($product) ? $product->produto_com_desconto : true)) ? 'true' : 'false' }},
 
         },
         
@@ -612,10 +634,11 @@ function productForm() {
 
 
 
-            if (this.formData.original_price < this.formData.price) {
-                alert('O preço de com desconto nunca pode ser maior que o preço real do produto.');
-                return;
-            }
+            if (this.formData.produto_com_desconto && this.formData.original_price >= this.formData.price) {
+    alert('O preço com desconto deve ser menor que o preço normal do produto.');
+    return;
+}
+
 
             if (this.requiresFiles) {
                 if (this.formData.attachments.length === 0) {

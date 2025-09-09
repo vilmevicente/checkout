@@ -796,30 +796,40 @@ fbq('track', 'PageView');
                         <h2 class="text-lg font-semibold mb-4">Resumo do Pedido</h2>
 
                         <!-- Main Product -->
-                        <div class="flex gap-3 mb-4">
-                            <div class="w-16 h-16 rounded-md bg-indigo-100 flex items-center justify-center">
-                                <i class="fas fa-graduation-cap text-indigo-600 text-xl"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-sm">{{ $mainProduct['name'] }}</h3>
-                                <div class="flex items-center gap-2 mt-1">
-    <span class="font-bold text-indigo-600">
-        R$ {{ number_format($mainProduct['price'], 2, ',', '.') }}
-    </span>
+<div class="flex gap-3 mb-4">
+    <div class="w-16 h-16 rounded-md bg-indigo-100 flex items-center justify-center">
+        <i class="fas fa-graduation-cap text-indigo-600 text-xl"></i>
+    </div>
+    <div class="flex-1">
+        <h3 class="font-medium text-sm">{{ $mainProduct['name'] }}</h3>
 
-    @if($mainProduct['original_price'] > $mainProduct['price'])
-        <span class="text-sm text-gray-500 line-through">
-            R$ {{ number_format($mainProduct['original_price'], 2, ',', '.') }}
-        </span>
-        <span class="text-green-600 text-sm font-medium">
-            Você economiza 
-            R$ {{ number_format($mainProduct['original_price'] - $mainProduct['price'], 2, ',', '.') }}
-        </span>
-    @endif
+        <div class="flex items-center gap-2 mt-1">
+            @if(!empty($mainProduct['produto_com_desconto']) && $mainProduct['produto_com_desconto'] && !empty($mainProduct['original_price']))
+                <!-- Preço com desconto -->
+                <span class="font-bold text-indigo-600">
+                    R$ {{ number_format($mainProduct['original_price'], 2, ',', '.') }}
+                </span>
+
+                <!-- Preço normal riscado -->
+                <span class="text-sm text-gray-500 line-through">
+                    R$ {{ number_format($mainProduct['price'], 2, ',', '.') }}
+                </span>
+
+                <!-- Economia -->
+                <span class="text-green-600 text-sm font-medium">
+                    Você economiza 
+                    R$ {{ number_format($mainProduct['price'] - $mainProduct['original_price'], 2, ',', '.') }}
+                </span>
+            @else
+                <!-- Preço normal (sem desconto) -->
+                <span class="font-bold text-indigo-600">
+                    R$ {{ number_format($mainProduct['price'], 2, ',', '.') }}
+                </span>
+            @endif
+        </div>
+    </div>
 </div>
 
-                            </div>
-                        </div>
 
                         <!-- Upsells Selected -->
                         <div x-show="selectedUpsells.length > 0" class="mb-4">
@@ -1266,8 +1276,8 @@ fbq('track', 'PageView');
                     recaptcha: ''
                 },
                 selectedUpsells: [],
-                total: {{ $mainProduct['price'] }},
-                totalSavings: {{ $mainProduct['original_price'] - $mainProduct['price'] }},
+                total: {{ ($mainProduct['produto_com_desconto']==true) ? $mainProduct['original_price'] : $mainProduct['price']  }},
+                totalSavings: {{ $mainProduct['price'] - $mainProduct['original_price'] }},
                 isProcessing: false,
                 showPixModal: false,
                 pixCode: '',
@@ -1643,8 +1653,8 @@ fbq('track', 'PageView');
                         recaptcha: ''
                     };
                     this.selectedUpsells = [];
-                    this.total = {{ $mainProduct['price'] }};
-                    this.totalSavings = {{ $mainProduct['original_price'] - $mainProduct['price'] }};
+                    this.total = {{ $mainProduct['produto_com_desconto']==true ? $mainProduct['original_price'] : $mainProduct['price'] }};
+                    this.totalSavings = {{ $mainProduct['price'] - $mainProduct['original_price'] }};
                     
                     // Resetar todos os checkboxes de upsells
                     document.querySelectorAll('input[type="checkbox"][name="upsells[]"]').forEach(checkbox => {

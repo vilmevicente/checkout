@@ -45,16 +45,26 @@
             <div class="p-6">
                 <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
                 
-                <div class="flex items-center mb-3">
-                    <span class="text-2xl font-bold text-blue-600">
-                        R$ {{ number_format($product->price, 2, ',', '.') }}
-                    </span>
-                    @if($product->original_price)
-                    <span class="ml-2 text-sm text-gray-500 line-through">
-                        R$ {{ number_format($product->original_price, 2, ',', '.') }}
-                    </span>
-                    @endif
-                </div>
+           <div class="flex items-center mb-3 gap-2">
+    @if(!empty($product->original_price) && $product->original_price < $product->price)
+        <!-- Preço com desconto -->
+        <span class="text-2xl font-bold text-blue-600">
+            R$ {{ number_format($product->original_price, 2, ',', '.') }}
+        </span>
+
+        <!-- Preço normal riscado -->
+        <span class="text-sm text-gray-500 line-through">
+            R$ {{ number_format($product->price, 2, ',', '.') }}
+        </span>
+
+    @else
+        <!-- Preço normal (sem desconto) -->
+        <span class="text-2xl font-bold text-blue-600">
+            R$ {{ number_format($product->price, 2, ',', '.') }}
+        </span>
+    @endif
+</div>
+
 
                 <p class="text-gray-600 mb-4 line-clamp-2">{{ $product->description }}</p>
 

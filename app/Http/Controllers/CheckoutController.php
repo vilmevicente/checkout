@@ -85,7 +85,7 @@ protected $pagFanService;
                 'customer_phone' => $request->phone,
                 'subtotal' => $mainProduct->price,
                 'discount' => $mainProduct->original_price ? 
-                             ($mainProduct->original_price - $mainProduct->price) : 0,
+                             ($mainProduct->price - $mainProduct->original_price) : 0,
                 'total' => $mainProduct->price,
                 'payment_method' => 'pix',
                 'status' => 'pending',
@@ -255,10 +255,18 @@ private function validatePixResponse($response)
         $discount = 0;
 
         foreach ($order->items as $item) {
-            $subtotal += $item->price;
-            if ($item->original_price) {
-                $discount += ($item->original_price - $item->price);
+            
+            if ($item->product->produto_com_desconto == 1) {
+                $subtotal += $item->original_price;
+                $discount += ($item->price - $item->original_price);
+              
+            } else{
+
+                 $subtotal += $item->price;
             }
+
+            
+
         }
 
         $order->update([
@@ -298,6 +306,10 @@ private function validatePixResponse($response)
 
 
         \Log::info('Template bruto:', [$content]);
+
+        
+
+
 
  // Renderizar o template (substitui Blade tags {{ $order->... }} etc.)
         $renderedContent = \Blade::render($content, ['order' => $order]);
