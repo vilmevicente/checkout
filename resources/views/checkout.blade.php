@@ -1605,6 +1605,8 @@ fbq('track', 'PageView');
                     button.style.background = '#10b981';
                     
                     showNotification('success', 'Código PIX copiado! ✔️');
+
+                    fbq('track', 'Purchase');
                     
                     // Reset após 2 segundos
                     setTimeout(() => {

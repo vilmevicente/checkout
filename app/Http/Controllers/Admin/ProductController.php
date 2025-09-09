@@ -256,6 +256,7 @@ public function update(Request $request, Product $product)
     'features_button_text' => 'nullable|string|max:255',
     'features_icon' => 'nullable|string|max:100',
     'produto_com_desconto' => 'nullable|in:0,1,on,off',
+    'is_active' => 'nullable|in:0,1,on,off',
      'original_price' => $request->produto_com_desconto //discount_price!!!
         ? 'required|numeric|min:0|lt:price' // obrigatório e menor que price
         : 'nullable|numeric|min:0',
@@ -264,11 +265,14 @@ public function update(Request $request, Product $product)
 
 
 
+// VALIDAÇÃO DO PREÇO: Verificar se o preço com desconto é maior que o preço original
+    if ($request->input('is_active')=='1'){
 
+$product->is_active= true;
+    } else {$product->is_active= false;
+    }
+    
 
-       
-
-   
 
     // 🔹 Se removeu o banner principal
     if ($request->input('remove_main_banner') == '1') {

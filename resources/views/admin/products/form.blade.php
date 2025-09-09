@@ -413,14 +413,7 @@
         </button>
     </div>
 
-        <!-- Status -->
-        <div class="mb-8">
-            <label class="flex items-center">
-                <input type="checkbox" name="is_active" x-model="formData.is_active" 
-                       class="mr-3 h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
-                <span class="text-sm font-medium text-gray-700">Produto Ativo</span>
-            </label>
-        </div>
+       
 
 
 <!-- Novos Campos Extras -->
@@ -491,6 +484,18 @@
 
 
 
+
+ <!-- Status -->
+        <div class="mb-8">
+            <input type="hidden" value="0" name="is_active">
+
+            <label class="flex items-center">
+
+                <input type="checkbox" value="1" name="is_active" x-model="formData.is_active" 
+                       class="mr-3 h-5 w-5 text-blue-600 rounded focus:ring-blue-500">
+                <span class="text-sm font-medium text-gray-700">Produto Ativo</span>
+            </label>
+        </div>
 
         <!-- Botões de Ação -->
         <div class="flex justify-end space-x-4">
