@@ -264,9 +264,11 @@ public function update(Request $request, Product $product)
 
 
 
- if ($request->input('produto_com_desconto')) {
-        $value = $request->boolean('produto_com_desconto');
-    }
+
+
+       
+
+   
 
     // 🔹 Se removeu o banner principal
     if ($request->input('remove_main_banner') == '1') {
@@ -287,7 +289,7 @@ public function update(Request $request, Product $product)
 
 
     // VALIDAÇÃO DO PREÇO: Verificar se o preço com desconto é maior que o preço original
-    if ($request->has('original_price') && $request->original_price !== null) {
+    if ($request->input('produto_com_desconto')=='1' &&$request->has('original_price') && $request->original_price !== null) {
         if ($request->original_price > $request->price) {
             return redirect()->back()
                 ->withInput()
@@ -338,6 +340,12 @@ public function update(Request $request, Product $product)
         }
         $bannerData['secondary_banner'] = $request->file('secondary_banner')->store('product-banners', 'public');
     }
+
+
+        if( $request->input('produto_com_desconto')=='0'){
+
+            $validated['original_price']=null;
+        }
 
     $product->update(array_merge($validated, $bannerData));
 

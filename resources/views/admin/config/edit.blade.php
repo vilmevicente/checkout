@@ -6,7 +6,10 @@
 
 <!-- CKEditor 5 -->
 <!-- Place the first <script> tag in your HTML's <head> -->
-<script src="https://cdn.tiny.cloud/1/qh7kr5myhfgb9mub891hdfvyy6x17m13fta2wy9p6x9saho2/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css"/>
+
 
 <div class="bg-white shadow rounded-lg max-w-4xl mx-auto">
      <div class="container mx-auto px-4 py-8">
@@ -497,57 +500,25 @@ function restoreDefaultOrderTemplate() {
 }
 </script>
 
-</script>
 
 
 
 
 
 <script>
-tinymce.init({
-    selector: '.html-editor',
-    menubar: false,
-    toolbar: 'code',
-    plugins: 'code',
-    height: 400,
-    branding: false,
-    entity_encoding: 'raw',
-    verify_html: false,     // <- não valida/limpa o HTML
-  valid_elements: '*[*]', // <- permite tudo
- 
-   setup: function (editor) {
+var editor = CodeMirror.fromTextArea(document.getElementById("content_delivery_template"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "default"
+  });
 
-    // Bloquear edição no modo visual
-    editor.on('init', function () {
-      const body = editor.getBody();
-      body.setAttribute('contenteditable', false);
 
-      // Previne colar/teclar no editor visual
-      editor.dom.bind(body, 'keydown paste input', function (e) {
-        e.preventDefault();
-        return false;
-      });
-    });
 
-    // Quando abrir o modal de código, permitir edição
-    editor.on('ExecCommand', function (e) {
-      if (e.command === 'mceCodeEditor') {
-        setTimeout(() => {
-          const textarea = document.querySelector('.tox-textarea');
-          if (textarea) {
-            textarea.removeAttribute('readonly'); // garante edição no modal
-          }
-        }, 100);
-      }
-    });
-
-    // Depois de salvar no código → volta a bloquear o visual
-    editor.on('SetContent', function () {
-      editor.getBody().setAttribute('contenteditable', false);
-    });
-  }
-});
-  
+var editor2 = CodeMirror.fromTextArea(document.getElementById("order_confirmation_template"), {
+    lineNumbers: true,
+    mode: "htmlmixed",
+    theme: "default"
+  });
 </script>
 
 

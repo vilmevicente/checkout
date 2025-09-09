@@ -901,50 +901,66 @@ fbq('track', 'PageView');
                     </div>
 
 
-@if($upsells->count()>0)
-                      <!-- Upsells Section -->
-                    <div class="bg-white rounded-xl shadow-elevated p-6 mb-8">
-                        <h2 class="text-lg font-semibold mb-6">
-    {{ $mainProduct['upsells_title'] ?? 'Adicione e Economize Mais' }}
-</h2>
+@if($upsells->count() > 0)
+    <!-- Upsells Section -->
+    <div class="bg-white rounded-xl shadow-elevated p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-6">
+            {{ $mainProduct['upsells_title'] ?? 'Adicione e Economize Mais' }}
+        </h2>
 
-                        @foreach($upsells as $index => $upsell)
-                        @php
-                        $discountPercentage = round((($upsell['original_price'] - $upsell['price']) / $upsell['original_price']) * 100);
-                        @endphp
-                        <div class="flex items-start gap-4 border rounded-xl p-4 mb-6 upsell-item">
-                            <img src="/storage/{{ $upsell['secondary_banner'] }}"
-                                alt="{{ $upsell['name'] }}"
-                                class="w-16 h-16 rounded-lg object-cover">
+        @foreach($upsells as $index => $upsell)
+            @php
+                $ppsel = ($upsell['produto_com_desconto'] == '1') 
+                    ? $upsell['original_price'] 
+                    : $upsell['price'];
 
-                            <div class="flex-1">
-                                <label for="upsell-{{ $index }}" class="font-medium text-sm cursor-pointer block">
-                                    <input type="checkbox"
-                                        id="upsell-{{ $index }}"
-                                        name="upsells[]"
-                                        value="{{ $upsell['id'] }}"
-                                        class="mr-2 h-5 w-5 text-indigo-600 border-gray-300 rounded upsell-checkbox"
-                                        data-price="{{ $upsell['price'] }}"
-                                        data-original-price="{{ $upsell['original_price'] }}"
-                                        data-name="{{ $upsell['name'] }}"
-                                        {{ in_array($upsell['id'], old('upsells', [])) ? 'checked' : '' }}
-                                        @change="updateUpsell('{{ $index }}', $event.target.checked, {{ $upsell['price'] }}, {{ $upsell['original_price'] }}, {{ $upsell['id'] }})">
-                                    {{ $upsell['name'] }} -
-                                    <span class="font-semibold">R$ {{ number_format($upsell['price'], 2, ',', '.') }}</span>
-                                </label>
+                $discountPercentage = 0;
+                if ($ppsel > $upsell['pivot']['discount_price']) {
+                    $discountPercentage = round((($ppsel - $upsell['pivot']['discount_price']) / $ppsel) * 100);
+                }
+            @endphp
 
-                                <p class="text-xs text-gray-500 mt-1">
-                                    De <span class="line-through">R$ {{ number_format($upsell['original_price'], 2, ',', '.') }}</span>
-                                    por <span class="font-semibold text-green-600">R$ {{ number_format($upsell['price'], 2, ',', '.') }}</span>
-                                    ({{ $discountPercentage }}% off)
-                                </p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
+            <div class="flex items-start gap-4 border rounded-xl p-4 mb-6 upsell-item">
+                <img src="/storage/{{ $upsell['secondary_banner'] }}"
+                    alt="{{ $upsell['name'] }}"
+                    class="w-16 h-16 rounded-lg object-cover">
 
+                <div class="flex-1">
+                    <label for="upsell-{{ $index }}" class="font-medium text-sm cursor-pointer block">
+                        <input type="checkbox"
+                            id="upsell-{{ $index }}"
+                            name="upsells[]"
+                            value="{{ $upsell['id'] }}"
+                            class="mr-2 h-5 w-5 text-indigo-600 border-gray-300 rounded upsell-checkbox"
+                            data-price="{{ $upsell['pivot']['discount_price'] }}"
+                            data-original-price="{{ $ppsel }}"
+                            data-name="{{ $upsell['name'] }}"
+                            {{ in_array($upsell['id'], old('upsells', [])) ? 'checked' : '' }}
+                            @change="updateUpsell('{{ $index }}', $event.target.checked, {{ $upsell['pivot']['discount_price']}}, {{$ppsel }}, {{ $upsell['id'] }})">
+                        {{ $upsell['name'] }} -
+                        <span class="font-semibold">
+                            R$ {{ number_format($upsell['pivot']['discount_price'], 2, ',', '.') }}
+                        </span>
+                    </label>
+
+                    @if($discountPercentage > 0)
+                        <p class="text-xs text-gray-500 mt-1">
+                            De 
+                            <span class="line-through">
+                                R$ {{ number_format($ppsel, 2, ',', '.') }}
+                            </span> 
+                            por 
+                            <span class="font-semibold text-green-600">
+                                R$ {{ number_format($upsell['pivot']['discount_price'], 2, ',', '.') }}
+                            </span>
+                            ({{ $discountPercentage }}% off)
+                        </p>
+                    @endif
+                </div>
+            </div>
+        @endforeach
+    </div>
 @endif
-
 
 
                     <!-- Benefits Section SIMPLES -->
@@ -1277,7 +1293,7 @@ fbq('track', 'PageView');
                 },
                 selectedUpsells: [],
                 total: {{ ($mainProduct['produto_com_desconto']==true) ? $mainProduct['original_price'] : $mainProduct['price']  }},
-                totalSavings: {{ $mainProduct['price'] - $mainProduct['original_price'] }},
+                totalSavings: {{  ( $mainProduct['produto_com_desconto']=='1') ?  $mainProduct['price'] - $mainProduct['original_price'] : 0 }},
                 isProcessing: false,
                 showPixModal: false,
                 pixCode: '',

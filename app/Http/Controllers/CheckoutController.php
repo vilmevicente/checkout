@@ -40,6 +40,7 @@ protected $pagFanService;
     // Redirecionar para página 404 ou mostrar erro
     abort(404, 'Produto não encontrado');
 }
+\Log::error("Procssuct", [$product->upsells]);
 
         return view('checkout', [
             'mainProduct' => $product,
@@ -75,7 +76,11 @@ protected $pagFanService;
     try {
         return \DB::transaction(function () use ($request) {
             // Buscar produto principal
-            $mainProduct = Product::findOrFail($request->product_id);
+            $mainProduct = Product::with([
+
+        'upsells',
+      
+    ])->findOrFail($request->product_id);
             
             // Criar pedido
             $order = Order::create([
@@ -97,9 +102,13 @@ protected $pagFanService;
 
             // Adicionar upsells selecionados
             if ($request->has('upsells')) {
-                foreach ($request->upsells as $upsellId) {
-                    $upsell = Product::find($upsellId);
-                    if ($upsell && $upsell->is_active) {
+                $selectedUpsells = $request->upsells;
+
+                foreach ($mainProduct->upsells as $upsell) {
+                    if (in_array($upsell->id, $selectedUpsells)) {
+                        // sobrescreve ou cria a propriedade dinâmica
+                        $upsell->price = $upsell->pivot->discount_price;
+
                         $this->addProductToOrder($order, $upsell, 'upsell');
                     }
                 }
@@ -232,7 +241,12 @@ private function validatePixResponse($response)
 
     private function addProductToOrder(Order $order, Product $product, string $type): void
     {
-        OrderItem::create([
+       
+
+
+
+
+ OrderItem::create([
             'order_id' => $order->id,
             'product_type' => $type,
             'product_id' => $product->id,
@@ -247,6 +261,12 @@ private function validatePixResponse($response)
                 'delivery_methods' => $product->deliveryMethods->toArray()
             ]
         ]);
+
+
+
+    \Log::error("upsell to view". $type, [$product]); 
+
+
     }
 
     private function calculateOrderTotals(Order $order): void
@@ -256,7 +276,7 @@ private function validatePixResponse($response)
 
         foreach ($order->items as $item) {
             
-            if ($item->product->produto_com_desconto == 1) {
+            if ($item->product->produto_com_desconto == '1') {
                 $subtotal += $item->original_price;
                 $discount += ($item->price - $item->original_price);
               
@@ -307,7 +327,7 @@ private function validatePixResponse($response)
 
         \Log::info('Template bruto:', [$content]);
 
-        
+
 
 
 
@@ -320,7 +340,7 @@ private function validatePixResponse($response)
             'content' => $renderedContent,
         ];
 
-       
+       \Log::error("Email Order", [$order->upsells()]);
             
            \Mail::send('admin.emails.layout', $data, function ($message) use ($order, $smtpConfig, $data) {
             $message->to($order->customer_email)

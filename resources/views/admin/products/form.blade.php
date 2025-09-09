@@ -48,10 +48,15 @@
         <!-- Checkbox -->
         <div class="flex items-center">
             <label class="inline-flex items-center">
+
+                <input type="hidden" name="produto_com_desconto" value="0">
+
                 <input type="checkbox" name="produto_com_desconto" 
                        x-model="formData.produto_com_desconto" 
                        value="1"
-                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
+                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500"
+
+                >
                 <span class="ml-2 text-sm text-gray-700">Produto com Desconto?</span>
             </label>
         </div>
@@ -634,7 +639,7 @@ function productForm() {
 
 
 
-            if (this.formData.produto_com_desconto && this.formData.original_price >= this.formData.price) {
+            if (this.formData.produto_com_desconto==true && this.formData.original_price >= this.formData.price) {
     alert('O preço com desconto deve ser menor que o preço normal do produto.');
     return;
 }
